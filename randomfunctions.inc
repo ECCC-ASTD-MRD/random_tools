@@ -46,19 +46,19 @@
 ! void F_VecDRanS_generic_stream(statep *s   , double *ranbuf, int n)
  interface
    subroutine VecDRanS_generic_stream(stream, ranbuf, n) bind(C,name='F_VecDRanS_generic_stream')
-   import :: RANDOM_STREAM,C_INT
+   import :: RANDOM_STREAM,C_INT,C_DOUBLE
    type(RANDOM_STREAM), intent(IN) :: stream
    integer(C_INT), intent(IN), value :: n
-   integer(c_INT), dimension(n), intent(OUT) :: ranbuf
+   real(C_DOUBLE), dimension(n), intent(OUT) :: ranbuf
    end subroutine VecDRanS_generic_stream
  end interface
 ! void F_VecDRan_generic_stream(statep *s   , double *ranbuf, int n)
  interface
    subroutine VecDRan_generic_stream(stream, ranbuf, n) bind(C,name='F_VecDRan_generic_stream')
-   import :: RANDOM_STREAM,C_INT
+   import :: RANDOM_STREAM,C_INT,C_DOUBLE
    type(RANDOM_STREAM), intent(IN) :: stream
    integer(C_INT), intent(IN), value :: n
-   integer(c_INT), dimension(n), intent(OUT) :: ranbuf
+   real(C_DOUBLE), dimension(n), intent(OUT) :: ranbuf
    end subroutine VecDRan_generic_stream
  end interface
 ! double F_DRan_NormalZig_stream(statep *s   )

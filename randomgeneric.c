@@ -78,25 +78,95 @@
 ! void F_VecDRanS_generic_stream(statep *s   , double *ranbuf, int n)                     !InTf!
  interface                                                                                !InTf!
    subroutine VecDRanS_generic_stream(stream, ranbuf, n) bind(C,name='F_VecDRanS_generic_stream') !InTf!
-   import :: RANDOM_STREAM,C_INT                                                          !InTf!
+   import :: RANDOM_STREAM,C_INT,C_DOUBLE                                                 !InTf!
    type(RANDOM_STREAM), intent(IN) :: stream                                              !InTf!
    integer(C_INT), intent(IN), value :: n                                                 !InTf!
-   integer(c_INT), dimension(n), intent(OUT) :: ranbuf                                    !InTf!
+   real(C_DOUBLE), dimension(n), intent(OUT) :: ranbuf                                    !InTf!
    end subroutine VecDRanS_generic_stream                                                 !InTf!
  end interface                                                                            !InTf!
 
 ! void F_VecDRan_generic_stream(statep *s   , double *ranbuf, int n)                      !InTf!
  interface                                                                                !InTf!
    subroutine VecDRan_generic_stream(stream, ranbuf, n) bind(C,name='F_VecDRan_generic_stream') !InTf!
-   import :: RANDOM_STREAM,C_INT                                                          !InTf!
+   import :: RANDOM_STREAM,C_INT,C_DOUBLE                                                 !InTf!
    type(RANDOM_STREAM), intent(IN) :: stream                                              !InTf!
    integer(C_INT), intent(IN), value :: n                                                 !InTf!
-   integer(c_INT), dimension(n), intent(OUT) :: ranbuf                                    !InTf!
+   real(C_DOUBLE), dimension(n), intent(OUT) :: ranbuf                                    !InTf!
    end subroutine VecDRan_generic_stream                                                  !InTf!
  end interface                                                                            !InTf!
 #endif
-
+//****P* librandom/random value generators
+// Synopsis
+// generic access to multiple families of random number generators (NOT for cryptographic usage)
+//
+// the user will create a random number "stream" of a given type (see available generators)
+// and call various functions/routines to produce random number sequences (scalar or vector).
+// the stream generators are believed to be "thread safe" once they are initialized
+// 
+// scalar values :
+//   unsigned integer value      0 <=  value  < 2**32 - 1
+//   unsigned double value     0.0 <   value  < 1.0
+//   signed double value      -1.0 <   value  < 1.0
+// vector of values : same 3 kinds as scalar values
+//
+// available generators  
+// linear generators :
+//    R250     (shift register sequence)     https://www.taygeta.com/rwalks/node2.html
+//    MT19937  (Mersenne twister)            https://en.wikipedia.org/wiki/Mersenne_Twister
+//    SHR3     (3-shift-register)
+//    XSR128   (xor-shift)                   https://en.wikipedia.org/wiki/Xorshift
+//    XSR128R  (xor-shift-rotate)            https://en.wikipedia.org/wiki/Xoroshiro128%2B
+// non linear generators :
+//    gaussian (ziggurat with 256 bins)      https://en.wikipedia.org/wiki/Ziggurat_algorithm
+//
+// performance:
+//    the R250 linear generator is the fastest of all (fully vectorizable)
+//
+// this package contains C and Fortran functions
+//     C function                                 equivalent Fortran function 
+// RanSetSeed_generic_stream        subroutine RanSetSeed_generic_stream(stream, piSeed, cSeed)
+// IRan_generic_stream              function   IRan_generic_stream(stream)  result(Iran)
+// DRan_generic_stream              function   DRan_generic_stream(stream)  result(Dran)
+// DRanS_generic_stream             function   DRanS_generic_stream(stream) result(Dran)
+// VecIRan_generic_stream           subroutine VecIRan_generic_stream(stream , Ibuf, n)
+// VecDRan_generic_stream           subroutine VecDRan_generic_stream(stream , Dbuf, n)
+// VecDRanS_generic_stream          subroutine VecDRanS_generic_stream(stream, Dbuf, n)
+//
+// Fortran arguments
+//    type(RANDOM_STREAM), intent(IN)              :: stream
+//    integer(c_INT), dimension(cSeed), intent(IN) :: piSeed
+//    integer(C_INT), intent(IN), value            :: cSeed
+//    integer(C_INT), intent(IN), value            :: n
+//    integer(C_INT)                               :: Iran
+//    real(C_DOUBLE)                               :: Dran
+//    integer(C_INT), dimension(n), intent(OUT)    :: Ibuf
+//    real(C_DOUBLE), dimension(n), intent(OUT)    :: Dbuf
+//
+// C note:
+//    to compile and load successfully, one must get the interface definitions from
+//
+//    #include <randomfunctions.h>
+//
+// Fortran note:
+//    to compile and load successfully, one must get the interface definitions from
+//
+//    use ISO_C_BINDING
+//    include 'randomfunctions.inc'
+//****
+//****f* librandom/RanSetSeed_generic_stream
+// Synopsis
+//    reseed a random generator "stream" previously created by a call to
+//    Ran_XXXXXX_new_stream (where XXXXXX is one of above mentioned linear generators)
+//
+// ARGUMENTS
 void RanSetSeed_generic_stream(generic_state *stream, unsigned int *piSeed, int cSeed)  // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+//    piSeed     integer "seed" array  (NULL pointer means use default seed)
+//    cSeed      size of "seed" array  (0 means use default seed)
+// OUTPUTS
+//    none       the stream is reseeded and its internal buffer is marked as empty
+//****
 {
   generic_state *state = stream ;
   state->seed(stream, piSeed, cSeed);
@@ -106,7 +176,16 @@ void F_RanSetSeed_generic_stream(statep *s, unsigned int *piSeed, int cSeed)  //
   RanSetSeed_generic_stream( s->p, piSeed, cSeed);
 }
 
+//****f* librandom/IRan_generic_stream
+// Synopsis
+//    generate a single unsigned 32bit integer value, according to the stream type
+// ARGUMENTS
 uint32_t IRan_generic_stream(generic_state *stream)       // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+// OUTPUTS
+//    unsigned 32bit integer,   0 <= value < 1
+//****
 {
 //   generic_state *state = stream ;
 //   return state->iran(stream);
@@ -122,7 +201,16 @@ uint32_t F_IRan_generic_stream(statep *s)  // Fortran interface using derived ty
   return(IRan_generic_stream(s->p));
 }
 
+//****f* librandom/DRan_generic_stream
+// Synopsis
+//    generate a single 64bit positive floating point value, according to the stream type
+// ARGUMENTS
 double DRan_generic_stream(generic_state *stream)       // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+// OUTPUTS
+//    64bit floating point number    0.0 < value < 1.0
+//****
 {
 //   generic_state *state = stream ;
 //   return state->dran(stream);
@@ -137,7 +225,16 @@ double F_DRan_generic_stream(statep *s)  // Fortran interface using derived type
   return(DRan_generic_stream(s->p));
 }
 
+//****f* librandom/DRanS_generic_stream
+// Synopsis
+//    generate a single 64bit signed floating point value, according to the stream type
+// ARGUMENTS
 double DRanS_generic_stream(generic_state *stream)       // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+// OUTPUTS
+//    64bit floating point number    -1.0 < value < 1.0
+//****
 {
 //   generic_state *state = stream ;
 //   return state->drans(stream);
@@ -152,7 +249,18 @@ double F_DRanS_generic_stream(statep *s)  // Fortran interface using derived typ
   return(DRanS_generic_stream(s->p));
 }
 
+//****f* librandom/VecIRan_generic_stream
+// Synopsis
+//    generate multiple unsigned 32bit integer values, according to the stream type
+//    ( 0 <= values < 1 )
+// ARGUMENTS
 void VecIRan_generic_stream(generic_state *stream, unsigned int *ranbuf, int n)       // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+//    n          number of values to generate
+// OUTPUTS
+//    ranbuf     array ot output values
+//****
 {
 //   generic_state *state = stream ;
 //   state->vec_iran(stream,ranbuf,n);
@@ -187,7 +295,18 @@ void F_VecIRan_generic_stream(statep *s, unsigned int *ranbuf, int n)  // Fortra
   VecIRan_generic_stream(s->p,ranbuf,n);
 }
 
+//****f* librandom/VecDRan_generic_stream
+// Synopsis
+//    generate multiple 64bit positive floating point values, according to the stream type
+//    ( 0.0 < values < 1.0 )
+// ARGUMENTS
 void VecDRan_generic_stream(generic_state *stream, double *ranbuf, int n)       // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+//    n          number of values to generate
+// OUTPUTS
+//    ranbuf     array ot output values
+//****
 {
 //   generic_state *state = stream ;
 //   state->vec_dran(stream,ranbuf,n);
@@ -222,7 +341,18 @@ void F_VecDRan_generic_stream(statep *s, double *ranbuf, int n)  // Fortran inte
   VecDRan_generic_stream(s->p,ranbuf,n);
 }
 
+//****f* librandom/VecDRanS_generic_stream
+// Synopsis
+//    generate multiple 64bit positive floating point values, according to the stream type
+//    ( -1.0 < values < 1.0 )
+// ARGUMENTS
 void VecDRanS_generic_stream(generic_state *stream, double *ranbuf, int n)       // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+//    n          number of values to generate
+// OUTPUTS
+//    ranbuf     array ot output values
+//****
 {
 //   generic_state *state = stream ;
 //   state->vec_drans(stream,ranbuf,n);

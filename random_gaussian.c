@@ -100,10 +100,10 @@ typedef struct{
 } zigbuf;
 
 // check that internal buffer contains at least N items. if not, refill it using stream vector integer function
-#define CHECKBUF(N) { if (navail-- < N) { (*zig->vec_iran)(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE-1 ; } }
-#define CHECKBUF1   { if (--navail < 0) { (*zig->vec_iran)(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE-1 ; } }
-#define CHECKB64(N) { if (navail-- < N) { (*zig->vec_iran)(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE2/2-1 ; } }
-#define CHECKB641   { if (--navail < 0) { (*zig->vec_iran)(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE2/2-1 ; } }
+#define CHECKBUF(N) { if (navail-- < N) { VecIRan_generic_stream(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE-1 ; } }
+#define CHECKBUF1   { if (--navail < 0) { VecIRan_generic_stream(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE-1 ; } }
+#define CHECKB64(N) { if (navail-- < N) { VecIRan_generic_stream(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE2/2-1 ; } }
+#define CHECKB641   { if (--navail < 0) { VecIRan_generic_stream(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE2/2-1 ; } }
 
 // initialize ziggurat algorithm tables
 static void InitZigguratMethodTables(double *redge, double *gauss, int nboxes, double tail, double boxarea){

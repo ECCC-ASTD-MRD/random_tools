@@ -10,6 +10,15 @@
    integer(c_INT), dimension(cSeed), intent(IN) :: piSeed
    end subroutine RanSetSeed_generic_stream
  end interface
+! void F_RanSetSeed_gaussian_stream(statep *s   , int *piSeed, int cSeed)
+ interface
+   subroutine RanSetSeed_gaussian_stream(stream, piSeed, cSeed) bind(C,name='F_RanSetSeed_gaussian_stream')
+   import :: RANDOM_STREAM,C_INT
+   type(RANDOM_STREAM), intent(IN) :: stream
+   integer(C_INT), intent(IN), value :: cSeed
+   integer(c_INT), dimension(cSeed), intent(IN) :: piSeed
+   end subroutine RanSetSeed_gaussian_stream
+ end interface
 ! unsigned int F_IRan_generic_stream(statep *s   )
  interface
    function IRan_generic_stream(stream) result(ran) bind(C,name='F_IRan_generic_stream')
@@ -25,6 +34,22 @@
    type(RANDOM_STREAM), intent(IN) :: stream
    real(C_DOUBLE) :: ran
    end function DRan_generic_stream
+ end interface
+! double F_DRan_gaussian_stream(statep *s   )
+ interface
+   function DRan_gaussian_stream(stream) result(ran) bind(C,name='F_DRan_gaussian_stream')
+   import :: C_DOUBLE,RANDOM_STREAM
+   type(RANDOM_STREAM), intent(IN) :: stream
+   real(C_DOUBLE) :: ran
+   end function DRan_gaussian_stream
+ end interface
+! double F_D64Ran_gaussian_stream(statep *s   )
+ interface
+   function D64Ran_gaussian_stream(stream) result(ran) bind(C,name='F_D64Ran_gaussian_stream')
+   import :: C_DOUBLE,RANDOM_STREAM
+   type(RANDOM_STREAM), intent(IN) :: stream
+   real(C_DOUBLE) :: ran
+   end function D64Ran_gaussian_stream
  end interface
 ! double F_DRanS_generic_stream(statep *s   )
  interface

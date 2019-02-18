@@ -38,6 +38,16 @@
    end subroutine RanSetSeed_generic_stream                                               !InTf!
  end interface                                                                            !InTf!
 
+! void F_RanSetSeed_gaussian_stream(statep *s   , int *piSeed, int cSeed)                  !InTf!
+ interface                                                                                !InTf!
+   subroutine RanSetSeed_gaussian_stream(stream, piSeed, cSeed) bind(C,name='F_RanSetSeed_gaussian_stream')  !InTf!
+   import :: RANDOM_STREAM,C_INT                                                          !InTf!
+   type(RANDOM_STREAM), intent(IN) :: stream                                              !InTf!
+   integer(C_INT), intent(IN), value :: cSeed                                             !InTf!
+   integer(c_INT), dimension(cSeed), intent(IN) :: piSeed                                 !InTf!
+   end subroutine RanSetSeed_gaussian_stream                                              !InTf!
+ end interface                                                                            !InTf!
+
 ! unsigned int F_IRan_generic_stream(statep *s   )                                        !InTf!
  interface                                                                                !InTf!
    function IRan_generic_stream(stream) result(ran) bind(C,name='F_IRan_generic_stream')  !InTf!
@@ -54,6 +64,24 @@
    type(RANDOM_STREAM), intent(IN) :: stream                                              !InTf!
    real(C_DOUBLE) :: ran                                                                  !InTf!
    end function DRan_generic_stream                                                       !InTf!
+ end interface                                                                            !InTf!
+
+! double F_DRan_gaussian_stream(statep *s   )                                             !InTf!
+ interface                                                                                !InTf!
+   function DRan_gaussian_stream(stream) result(ran) bind(C,name='F_DRan_gaussian_stream')  !InTf!
+   import :: C_DOUBLE,RANDOM_STREAM                                                       !InTf!
+   type(RANDOM_STREAM), intent(IN) :: stream                                              !InTf!
+   real(C_DOUBLE) :: ran                                                                  !InTf!
+   end function DRan_gaussian_stream                                                      !InTf!
+ end interface                                                                            !InTf!
+
+! double F_D64Ran_gaussian_stream(statep *s   )                                              !InTf!
+ interface                                                                                !InTf!
+   function D64Ran_gaussian_stream(stream) result(ran) bind(C,name='F_D64Ran_gaussian_stream')  !InTf!
+   import :: C_DOUBLE,RANDOM_STREAM                                                       !InTf!
+   type(RANDOM_STREAM), intent(IN) :: stream                                              !InTf!
+   real(C_DOUBLE) :: ran                                                                  !InTf!
+   end function D64Ran_gaussian_stream                                                    !InTf!
  end interface                                                                            !InTf!
 
 ! double F_DRanS_generic_stream(statep *s   )                                             !InTf!
@@ -110,14 +138,14 @@
 // vector of values : same 3 kinds as scalar values
 //
 // available generators  
-// linear generators :
+// generic (linear) generators :
 //    R250     (shift register sequence)     https://www.taygeta.com/rwalks/node2.html
 //    MT19937  (Mersenne twister)            https://en.wikipedia.org/wiki/Mersenne_Twister
 //    SHR3     (3-shift-register)
 //    XSR128   (xor-shift)                   https://en.wikipedia.org/wiki/Xorshift
 //    XSR128R  (xor-shift-rotate)            https://en.wikipedia.org/wiki/Xoroshiro128%2B
-// non linear generators :
-//    gaussian (ziggurat with 256 bins)      https://en.wikipedia.org/wiki/Ziggurat_algorithm
+// gaussian (normal) generators :
+//    NormalZig (ziggurat with 256 bins)     https://en.wikipedia.org/wiki/Ziggurat_algorithm
 //
 // performance:
 //    the R250 linear generator is the fastest of all (fully vectorizable)
@@ -131,6 +159,9 @@
 // VecIRan_generic_stream           subroutine VecIRan_generic_stream(stream , Ibuf, n)
 // VecDRan_generic_stream           subroutine VecDRan_generic_stream(stream , Dbuf, n)
 // VecDRanS_generic_stream          subroutine VecDRanS_generic_stream(stream, Dbuf, n)
+// RanSetSeed_gaussian_stream       subroutine RanSetSeed_gaussian_stream(stream, piSeed, cSeed)
+// DRan_gaussian_stream             function   DRan_gaussian_stream(stream)
+// D64Ran_gaussian_stream           function   D64Ran_gaussian_stream(stream)
 //
 // Fortran arguments
 //    type(RANDOM_STREAM), intent(IN)              :: stream
@@ -153,6 +184,70 @@
 //    use ISO_C_BINDING
 //    include 'randomfunctions.inc'
 //****
+
+void RanNormalZigSetSeed(generic_state *stream, int *piSeed, int cSeed);
+//****f* librandom/RanSetSeed_gaussian_stream
+// Synopsis
+//    reseed a random generator "stream" previously created by a call to
+//    Ran_XXXXXX_new_stream (where XXXXXX is one of above mentioned linear generators)
+//
+// ARGUMENTS
+void RanSetSeed_gaussian_stream(generic_state *stream, int *piSeed, int cSeed)  // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+//    piSeed     not used  (for consistency with other reseeding functions)
+//    cSeed      not used  (for consistency with other reseeding functions)
+// OUTPUTS
+//    none       the gaussian stream is initialized and its internal buffer is marked as empty
+//****
+{
+  RanNormalZigSetSeed(stream, piSeed, cSeed);
+}
+void F_RanSetSeed_gaussian_stream(statep *s, int *piSeed, int cSeed)            // !InTc!
+{
+  RanNormalZigSetSeed(s->p, piSeed, cSeed);
+}
+
+double DRan_NormalZig_stream(generic_state *stream);
+//****f* librandom/DRan_gaussian_stream
+// Synopsis
+//    generate a single 64bit positive floating point value, 
+//    gaussian distribution with 32 significant bits in mantissa
+// ARGUMENTS
+double DRan_gaussian_stream(generic_state *stream)                              // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+// OUTPUTS
+//    64bit floating point number, gaussian distribution, 32 significant bits in mantissa
+//****
+{
+  return DRan_NormalZig_stream(stream);
+}
+double F_DRan_gaussian_stream(statep *s)       // !InTc!
+{
+  return DRan_NormalZig_stream(s->p);
+}
+
+double D64Ran_NormalZig_stream(generic_state *stream);
+//****f* librandom/D64Ran_gaussian_stream
+// Synopsis
+//    generate a single 64bit positive floating point value, 
+//    gaussian distribution with 52 significant bits in mantissa
+// ARGUMENTS
+double D64Ran_gaussian_stream(generic_state *stream)                            // !InTc!
+// INPUTS
+//    stream     linear stream created by a Ran_XXXXXX_new_stream function
+// OUTPUTS
+//    64bit floating point number, gaussian distribution, 52 significant bits in mantissa
+//****
+{
+  return D64Ran_NormalZig_stream(stream);
+}
+double F_D64Ran_gaussian_stream(statep *s)       // !InTc!
+{
+  return D64Ran_NormalZig_stream(s->p);
+}
+
 //****f* librandom/RanSetSeed_generic_stream
 // Synopsis
 //    reseed a random generator "stream" previously created by a call to

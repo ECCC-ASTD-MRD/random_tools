@@ -76,7 +76,7 @@ int main(int argc, char **argv){
   printf("maxpos, maxneg transformed with CVTDBLS_32 : %22.18f %22.18f , %16.16Lx, %16.16Lx\n",dmax,dmin,*idmax,*idmin);
 
   stream = Ran_R250_new_stream(NULL, &myseed , 1);
-  RanNormalZigSetSeed(stream, &myseed, 1);
+  RanSetSeed_gaussian_stream(stream, &myseed, 1);
 //   RanNormalZigSetSeed128(stream, &myseed, 1);
 //   RanNormalZigSetSeed256(stream, &myseed, 1);
 
@@ -86,9 +86,11 @@ int main(int argc, char **argv){
   for(j=0; j<10 ; j++) ;
   for( i=0 ; i < 1000000000 ; i++) {
 #if defined(TEST64)
-    rval = D64Ran_NormalZig_stream(stream);      // use C entry point
+//     rval = D64Ran_gaussian_stream(stream);      // use C entry point
+    rval = F_D64Ran_gaussian_stream((struct statep *) &stream);  // use Fortran entry point
 #else
-    rval = DRan_NormalZig_stream(stream);        // use C entry point
+//     rval = DRan_gaussian_stream(stream);        // use C entry point
+    rval = F_DRan_gaussian_stream((struct statep *) &stream);    // use Fortran entry point
 #endif
     avg = avg + rval ;
     dmin = (dmin < rval) ? dmin : rval ;
@@ -120,12 +122,12 @@ int main(int argc, char **argv){
   t0 = MPI_Wtime();
   for( i=0 ; i < 1000000000 ; i++) 
 #if defined(TEST64)
-    rval = F_D64Ran_NormalZig_stream((void **) &stream);  // time Fortran entry point (costlier)
+    rval = F_D64Ran_gaussian_stream((struct statep *) &stream);  // time Fortran entry point (costlier)
 #else
-    rval = F_DRan_NormalZig_stream((void **) &stream);    // time Fortran entry point (costlier)
+    rval = F_DRan_gaussian_stream((struct statep *) &stream);    // time Fortran entry point (costlier)
 #endif
   t1 = MPI_Wtime();
-  printf("time for 1E+9 x 1 random DRan_NormalZig_stream/R250 double value = %6.3f \n",t1-t0);  // DRan_NormalZig_stream256
+  printf("time for 1E+9 x 1 random DRan_gaussian_stream/R250 double value = %6.3f \n",t1-t0);  // DRan_gaussian_stream256
 
   t1 = 0 ; t0 = 1 ; 
   INSTRUMENT(t1 = funquick ; t0 = funcalls+1 ; )

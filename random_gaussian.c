@@ -100,6 +100,7 @@ typedef struct{
 } zigbuf;
 
 // check that internal buffer contains at least N items. if not, refill it using stream vector integer function
+void VecIRan_generic_stream(generic_state *stream, unsigned int *ranbuf, int n);
 #define CHECKBUF(N) { if (navail-- < N) { VecIRan_generic_stream(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE-1 ; } }
 #define CHECKBUF1   { if (--navail < 0) { VecIRan_generic_stream(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE-1 ; } }
 #define CHECKB64(N) { if (navail-- < N) { VecIRan_generic_stream(stream,(void *)buffer,ZIGBUFSIZE2 ) ; navail = ZIGBUFSIZE2/2-1 ; } }
@@ -144,8 +145,6 @@ static int init1 = 0;
 // initialize ziggurat algorithm tables (256 boxes)
 static void InitZigguratMethodTables256(void)
 {
-  int i;
-  double p;
   InitZigguratMethodTables(redge1,gauss1,NBOXES1,TAIL1,BOXAREA1);
 }
 

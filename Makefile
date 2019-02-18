@@ -1,9 +1,9 @@
 
 CCOMP = s.cc
-CFLAGS = -mpi -O2 -ftree-vectorize -mfma -mavx2
+CFLAGS = -mpi -O2 -ftree-vectorize -mfma -mavx2 -Wall
 
 SOURCES = randomgeneric.c random_gaussian.c   random_mt19937.c  random_r250.c  \
-          random_shr3.c random_xorshiftrotate.c  random_xsr128.c  random_xsr128r.c
+          random_shr3.c random_xsr128.c  random_xsr128r.c
 
 INCLUDES = randomgeneric.h
 

@@ -32,21 +32,21 @@ INSTRUMENT(unsigned int funloops;)
 INSTRUMENT(unsigned int funused;)
 
 int main(int argc, char **argv){
-  unsigned int lr;
+//   unsigned int lr;
   int i, j;
   double t0, t1, rval;
   double MPI_Wtime() ;
-  unsigned int ranbuf[1200000];
-  double ranbuf2[1200000];
-  int pos, neg, mask, postot, negtot ;
+//   unsigned int ranbuf[1200000];
+//   double ranbuf2[1200000];
+//   int pos, neg, mask, postot, negtot ;
   double dmax, dmin, avg;
   unsigned long long *idmax, *idmin ;
   unsigned int maxpos, maxneg;
-  int gaussdist[10];
+//   int gaussdist[10];
   int biggaussdist[2001];
   int index;
   generic_state *stream;
-  int myseed = 123456;
+  uint32_t myseed = 123456;
   double x, p1, p2, prob, ptot;
   int est[2001];
   union{
@@ -62,8 +62,8 @@ int main(int argc, char **argv){
   v.d = INVM64 ; printf("%5i %16.16lx %24.20g\n",64,v.l,v.d);
   v.d = INVM65 ; printf("%5i %16.16lx %24.20g\n",65,v.l,v.d);
 //   void  RanNormalZigSetSeed(void *stream, int *piSeed, int cSeed)  ;
-  for(i=0 ; i<1200000 ; i++) ranbuf[i] = 0;
-  for(i=0 ; i<1200000 ; i++) ranbuf2[i] = 0.0;
+//   for(i=0 ; i<1200000 ; i++) ranbuf[i] = 0;
+//   for(i=0 ; i<1200000 ; i++) ranbuf2[i] = 0.0;
   maxpos = 0x7FFFFFFF ;
   maxneg = 0x80000000 ;
   idmax = (unsigned long long *)&dmax;
@@ -81,16 +81,17 @@ int main(int argc, char **argv){
 //   RanNormalZigSetSeed256(stream, &myseed, 1);
 
   dmin = 0.0 ; dmax = 0.0;
-  for( i=0 ; i < 10 ; i++) gaussdist[i] = 0;
+//   for( i=0 ; i < 10 ; i++) gaussdist[i] = 0;
   for( i=0 ; i < 2001 ; i++) biggaussdist[i] = 0;
   for(j=0; j<10 ; j++) ;
+  avg = 0.0;
   for( i=0 ; i < 1000000000 ; i++) {
 #if defined(TEST64)
 //     rval = D64Ran_gaussian_stream(stream);      // use C entry point
-    rval = F_D64Ran_gaussian_stream((struct statep *) &stream);  // use Fortran entry point
+    rval = F_D64Ran_gaussian_stream((statep *) &stream);  // use Fortran entry point
 #else
 //     rval = DRan_gaussian_stream(stream);        // use C entry point
-    rval = F_DRan_gaussian_stream((struct statep *) &stream);    // use Fortran entry point
+    rval = F_DRan_gaussian_stream((statep *) &stream);    // use Fortran entry point
 #endif
     avg = avg + rval ;
     dmin = (dmin < rval) ? dmin : rval ;
@@ -131,15 +132,15 @@ int main(int argc, char **argv){
 
   t1 = 0 ; t0 = 1 ; 
   INSTRUMENT(t1 = funquick ; t0 = funcalls+1 ; )
-  INSTRUMENT(printf("quick calls in gaussian generator = %7.3f%\n",t1 / t0 * 100.0);)
+  INSTRUMENT(printf("quick calls in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
   INSTRUMENT(t1 = funtails ;)
-  INSTRUMENT(printf("tail calls in gaussian generator  = %7.3f%\n",t1 / t0 * 100.0);)
+  INSTRUMENT(printf("tail calls in gaussian generator  = %7.3f\n",t1 / t0 * 100.0);)
   INSTRUMENT(t1 = funwedge ;)
-  INSTRUMENT(printf("wedge calls in gaussian generator = %7.3f%\n",t1 / t0 * 100.0);)
+  INSTRUMENT(printf("wedge calls in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
   INSTRUMENT(t1 = funloops ;)
-  INSTRUMENT(printf("extra loops in gaussian generator = %7.3f%\n",t1 / t0 * 100.0);)
+  INSTRUMENT(printf("extra loops in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
   INSTRUMENT(t1 = funused ;)
-  INSTRUMENT(printf("uniform random values used        = %7.3f%\n",t1 / t0 * 100.0);)
+  INSTRUMENT(printf("uniform random values used        = %7.3f\n",t1 / t0 * 100.0);)
   MPI_Finalize();
   return(0);
 }

@@ -34,13 +34,11 @@ int main(int argc, char **argv){
   int ran;
   long long count, counts ;
 #endif
-  double dmax, dmin, avg;
+  double dmax, dmin;
   unsigned long long *idmax, *idmin ;
   unsigned int maxpos, maxneg;
   generic_state *gen = NULL;
-  int gaussdist[10];
-  int index;
-  int mySeed = 0;
+  uint32_t mySeed = 0;
 
   MPI_Init(&argc,&argv);
   for(i=0 ; i<1200000 ; i++) ranbuf[i] = 0;

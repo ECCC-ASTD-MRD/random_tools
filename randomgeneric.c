@@ -188,14 +188,14 @@
 //    include 'randomfunctions.inc'
 //****
 
-void RanNormalZigSetSeed(generic_state *stream, int *piSeed, int cSeed);
+void RanNormalZigSetSeed(generic_state *stream, uint32_t *piSeed, int cSeed);
 //****f* librandom/RanSetSeed_gaussian_stream
 // Synopsis
 //    reseed a random generator "stream" previously created by a call to
 //    Ran_XXXXXX_new_stream (where XXXXXX is one of above mentioned linear generators)
 //
 // ARGUMENTS
-void RanSetSeed_gaussian_stream(generic_state *stream, int *piSeed, int cSeed)  // !InTc!
+void RanSetSeed_gaussian_stream(generic_state *stream, uint32_t *piSeed, int cSeed)  // !InTc!
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 //    piSeed     not used  (for consistency with other reseeding functions)
@@ -206,7 +206,7 @@ void RanSetSeed_gaussian_stream(generic_state *stream, int *piSeed, int cSeed)  
 {
   RanNormalZigSetSeed(stream, piSeed, cSeed);
 }
-void F_RanSetSeed_gaussian_stream(statep *s, int *piSeed, int cSeed)            // !InTc!
+void F_RanSetSeed_gaussian_stream(statep *s, uint32_t *piSeed, int cSeed)            // !InTc!
 {
   RanNormalZigSetSeed(s->p, piSeed, cSeed);
 }
@@ -364,8 +364,8 @@ void VecIRan_generic_stream(generic_state *stream, unsigned int *ranbuf, int n) 
 //   state->vec_iran(stream,ranbuf,n);
   int topp1 = stream->top + 1;
   int cur = stream->cur;
-  int *buf = stream->buf;
-  int i;
+  uint32_t *buf = stream->buf;
+
   while(n > 0 && cur < topp1){
     *ranbuf = buf[cur] ; ranbuf++ ; cur++; n-- ;
   }
@@ -410,8 +410,8 @@ void VecDRan_generic_stream(generic_state *stream, double *ranbuf, int n)       
 //   state->vec_dran(stream,ranbuf,n);
   int topp1 = stream->top + 1;
   int cur = stream->cur;
-  int *buf = stream->buf;
-  int i;
+  uint32_t *buf = stream->buf;
+
   while(n > 0 && cur < topp1){
     *ranbuf = CVTDBL_32(buf[cur]) ; ranbuf++ ; cur++; n-- ;
   }
@@ -456,8 +456,8 @@ void VecDRanS_generic_stream(generic_state *stream, double *ranbuf, int n)      
 //   state->vec_drans(stream,ranbuf,n);
   int topp1 = stream->top + 1;
   int cur = stream->cur;
-  int *buf = stream->buf;
-  int i;
+  uint32_t *buf = stream->buf;
+
   while(n > 0 && cur < topp1){
     *ranbuf = CVTDBLS_32(buf[cur]) ; ranbuf++ ; cur++; n-- ;
   }

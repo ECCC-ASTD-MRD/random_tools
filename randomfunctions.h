@@ -1,7 +1,7 @@
 #include <randomgeneric.h>
 // generic interface to random functions using streams;
-void RanSetSeed_gaussian_stream(generic_state *stream, int *piSeed, int cSeed);
-void F_RanSetSeed_gaussian_stream(statep *s, int *piSeed, int cSeed);
+void RanSetSeed_gaussian_stream(generic_state *stream, uint32_t *piSeed, int cSeed);
+void F_RanSetSeed_gaussian_stream(statep *s, uint32_t *piSeed, int cSeed);
 double DRan_gaussian_stream(generic_state *stream);
 double F_DRan_gaussian_stream(statep *s);
 double D64Ran_gaussian_stream(generic_state *stream);

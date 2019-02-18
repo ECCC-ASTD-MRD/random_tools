@@ -130,6 +130,9 @@
 // the user will create a random number "stream" of a given type (see available generators)
 // and call various functions/routines to produce random number sequences (scalar or vector).
 // the stream generators are believed to be "thread safe" once they are initialized
+//
+// source code available at:
+//   https://gitlab.com/mfvalin/random_tools
 // 
 // scalar values :
 //   unsigned integer value      0 <=  value  < 2**32 - 1

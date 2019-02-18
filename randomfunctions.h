@@ -4,7 +4,7 @@ void RanSetSeed_gaussian_stream(generic_state *stream, int *piSeed, int cSeed);
 void F_RanSetSeed_gaussian_stream(statep *s, int *piSeed, int cSeed);
 double DRan_gaussian_stream(generic_state *stream);
 double F_DRan_gaussian_stream(statep *s);
-double DRan64_gaussian_stream(generic_state *stream);
+double D64Ran_gaussian_stream(generic_state *stream);
 double F_D64Ran_gaussian_stream(statep *s);
 void RanSetSeed_generic_stream(generic_state *stream, unsigned int *piSeed, int cSeed);
 uint32_t IRan_generic_stream(generic_state *stream);

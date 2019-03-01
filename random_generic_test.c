@@ -39,8 +39,15 @@ int main(int argc, char **argv){
   unsigned int maxpos, maxneg;
   generic_state *gen = NULL;
   uint32_t mySeed = 0;
+  int mpi_rank = 0;
+  int ierr;
 
   MPI_Init(&argc,&argv);
+  ierr = MPI_Comm_rank(MPI_COMM_WORLD,&mpi_rank);
+  if(ierr != MPI_SUCCESS) {
+    MPI_Finalize();
+    return 1;
+  }
   for(i=0 ; i<1200000 ; i++) ranbuf[i] = 0;
   for(i=0 ; i<1200000 ; i++) ranbuf2[i] = 0.0;
   maxpos = 0x7FFFFFFF ;
@@ -49,11 +56,11 @@ int main(int argc, char **argv){
   idmin = (unsigned long long *)&dmin;
   dmax = CVTDBL_32(maxpos) ;
   dmin = CVTDBL_32(maxneg) ;
-  printf("maxpos, maxneg transformed with CVTDBL_32  : %22.18f %22.18f , %16.16Lx, %16.16Lx\n",dmax,dmin,*idmax,*idmin);
+  if(mpi_rank == 0) printf("maxpos, maxneg transformed with CVTDBL_32  : %22.18f %22.18f , %16.16Lx, %16.16Lx\n",dmax,dmin,*idmax,*idmin);
   dmax = CVTDBLS_32(maxpos) ;
   dmin = CVTDBLS_32(maxneg) ;
-  printf("maxpos, maxneg transformed with CVTDBLS_32 : %22.18f %22.18f , %16.16Lx, %16.16Lx\n",dmax,dmin,*idmax,*idmin);
-  printf("time per value (nanoseconds)\n");
+  if(mpi_rank == 0) printf("maxpos, maxneg transformed with CVTDBLS_32 : %22.18f %22.18f , %16.16Lx, %16.16Lx\n",dmax,dmin,*idmax,*idmin);
+  if(mpi_rank == 0) printf("time per value (nanoseconds)\n");
 #if defined(TEST_R250)
   mySeed = 123456;
   gen = (generic_state *)  Ran_R250_new_stream(NULL, &mySeed, 1);
@@ -74,12 +81,12 @@ int main(int argc, char **argv){
 #if defined(CYCLIC_TEST)
   ran = IRan_generic_stream(gen);
   counts = 0;
-  fprintf(stdout,"ran target = %d\n",ran);
+  fif(mpi_rank == 0) printf(stdout,"ran target = %d\n",ran);
   for(j=0 ; j<1000 ; j++){
     count = 0;
     while(ran != IRan_generic_stream(gen)) count ++ ;
     counts += count;
-    fprintf(stdout,"%5d-repeat after %12Ld , running average = %12Ld\n",j+1,count,counts / (j+1)) ;
+    fif(mpi_rank == 0) printf(stdout,"%5d-repeat after %12Ld , running average = %12Ld\n",j+1,count,counts / (j+1)) ;
     fflush(stdout);
   }
 exit(0);
@@ -87,13 +94,13 @@ exit(0);
 
   for( i=0 ; i < 1000000 ; i++) lr = IRan_generic_stream(gen);  // prime the pump
 
-  printf("random stream will be reseeded with defaults before each timing test\n");
+  if(mpi_rank == 0) printf("random stream will be reseeded with defaults before each timing test\n");
   MPI_Barrier(MPI_COMM_WORLD);
   RanSetSeed_generic_stream(gen,NULL,0);
   t0 = MPI_Wtime();
   for( i=0 ; i < NSAMPLES ; i++) lr = IRan_generic_stream(gen);
   t1 = MPI_Wtime();
-  printf("time for 1E+9 x 1    random generic scalar        integer value = %6.3f , last = %12d\n",t1-t0, lr);
+  if(mpi_rank == 0) printf("time for 1E+9 x 1    random generic scalar        integer value = %6.3f , last = %12d\n",t1-t0, lr);
 
   for( i=0 ; i < 1000000 ; i++) rval = DRan_generic_stream(gen);
   MPI_Barrier(MPI_COMM_WORLD);
@@ -101,7 +108,7 @@ exit(0);
   t0 = MPI_Wtime();
   for( i=0 ; i < NSAMPLES ; i++) rval = DRan_generic_stream(gen);
   t1 = MPI_Wtime();
-  printf("time for 1E+9 x 1    random generic scalar         double value = %6.3f , last = %12g\n",t1-t0,rval);
+  if(mpi_rank == 0) printf("time for 1E+9 x 1    random generic scalar         double value = %6.3f , last = %12g\n",t1-t0,rval);
 
   for( i=0 ; i < 1000000 ; i++) rval = DRanS_generic_stream(gen);
   MPI_Barrier(MPI_COMM_WORLD);
@@ -109,7 +116,7 @@ exit(0);
   t0 = MPI_Wtime();
   for( i=0 ; i < NSAMPLES ; i++) rval = DRanS_generic_stream(gen);
   t1 = MPI_Wtime();
-  printf("time for 1E+9 x 1    random generic scalar  signed double value = %6.3f , last = %12g\n",t1-t0,rval);
+  if(mpi_rank == 0) printf("time for 1E+9 x 1    random generic scalar  signed double value = %6.3f , last = %12g\n",t1-t0,rval);
 
   for( i=0 ; i < 10 ; i++) VecIRan_generic_stream(gen,ranbuf, 1000000) ;
   MPI_Barrier(MPI_COMM_WORLD);
@@ -119,7 +126,7 @@ exit(0);
     VecIRan_generic_stream(gen, ranbuf, 1000000) ;
   }
   t1 = MPI_Wtime();
-  printf("time for 1E+3 x 1E+6 random generic Vector       integer values = %6.3f , last = %12d ",t1-t0,ranbuf[1000000-1]);
+  if(mpi_rank == 0) printf("time for 1E+3 x 1E+6 random generic Vector       integer values = %6.3f , last = %12d ",t1-t0,ranbuf[1000000-1]);
 
   postot = 0 ; negtot = 0;
   RanSetSeed_generic_stream(gen,NULL,0);
@@ -130,10 +137,10 @@ exit(0);
       pos = 0 ; neg = 0 ; 
       for( i=0 ; i < 1000000 ; i++) if(ranbuf[i] & mask) pos++ ; else neg++  ; 
       postot += pos ; negtot += neg ;
-      mask <<= 1 ;//  printf("%5d ",pos-neg) ;
+      mask <<= 1 ;//  if(mpi_rank == 0) printf("%5d ",pos-neg) ;
     }
   }
-  printf(", pos - neg = %d\n",postot-negtot);
+  if(mpi_rank == 0) printf(", pos - neg = %d\n",postot-negtot);
 
   for( i=0 ; i < 10 ; i++) VecDRan_generic_stream(gen, ranbuf2, 1000000) ;
   MPI_Barrier(MPI_COMM_WORLD);
@@ -143,7 +150,7 @@ exit(0);
     VecDRan_generic_stream(gen, ranbuf2, 1000000) ;
   }
   t1 = MPI_Wtime();
-  printf("time for 1E+3 x 1E+6 random generic Vector        double values = %6.3f,  last = %12g\n",t1-t0,ranbuf2[1000000-1]);
+  if(mpi_rank == 0) printf("time for 1E+3 x 1E+6 random generic Vector        double values = %6.3f,  last = %12g\n",t1-t0,ranbuf2[1000000-1]);
 
   for( i=0 ; i < 10 ; i++) VecDRanS_generic_stream(gen, ranbuf2, 1000000) ;
   MPI_Barrier(MPI_COMM_WORLD);
@@ -153,7 +160,7 @@ exit(0);
     VecDRanS_generic_stream(gen, ranbuf2, 1000000) ;
   }
   t1 = MPI_Wtime();
-  printf("time for 1E+3 x 1E+6 random generic Vector signed double values = %6.3f,  last = %12g\n",t1-t0,ranbuf2[1000000-1]);
+  if(mpi_rank == 0) printf("time for 1E+3 x 1E+6 random generic Vector signed double values = %6.3f,  last = %12g\n",t1-t0,ranbuf2[1000000-1]);
 
   for( i=0 ; i < 1000 ; i++) VecIRan_generic_stream(gen, &ranbuf[i], 1000) ;
   MPI_Barrier(MPI_COMM_WORLD);
@@ -163,7 +170,7 @@ exit(0);
     VecIRan_generic_stream(gen, &ranbuf[i], 1000) ;
   }
   t1 = MPI_Wtime();
-  printf("time for 1E+6 x 1E+3 random generic Vector       integer values = %6.3f , last = %12d\n",t1-t0,ranbuf[i+1000-2]);
+  if(mpi_rank == 0) printf("time for 1E+6 x 1E+3 random generic Vector       integer values = %6.3f , last = %12d\n",t1-t0,ranbuf[i+1000-2]);
 
   for( i=0 ; i < 1000 ; i++) VecDRan_generic_stream(gen, &ranbuf2[i], 1000) ;
   MPI_Barrier(MPI_COMM_WORLD);
@@ -173,7 +180,7 @@ exit(0);
     VecDRan_generic_stream(gen, &ranbuf2[i], 1000) ;
   }
   t1 = MPI_Wtime();
-  printf("time for 1E+6 x 1E+3 random generic Vector        double values = %6.3f,  last = %12g\n",t1-t0,ranbuf2[i+1000-2]);
+  if(mpi_rank == 0) printf("time for 1E+6 x 1E+3 random generic Vector        double values = %6.3f,  last = %12g\n",t1-t0,ranbuf2[i+1000-2]);
 
   for( i=0 ; i < 1000 ; i++) VecDRanS_generic_stream(gen, &ranbuf2[i], 1000) ;
   MPI_Barrier(MPI_COMM_WORLD);
@@ -183,7 +190,7 @@ exit(0);
     VecDRanS_generic_stream(gen, &ranbuf2[i], 1000) ;
   }
   t1 = MPI_Wtime();
-  printf("time for 1E+6 x 1E+3 random generic Vector signed double values = %6.3f,  last = %12g\n",t1-t0,ranbuf2[i+1000-2]);
+  if(mpi_rank == 0) printf("time for 1E+6 x 1E+3 random generic Vector signed double values = %6.3f,  last = %12g\n",t1-t0,ranbuf2[i+1000-2]);
 
   MPI_Finalize();
   return(0);

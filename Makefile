@@ -1,4 +1,4 @@
-
+RM = echo
 CCOMP = s.cc
 CFLAGS = -mpi -O2 -ftree-vectorize -mfma -mavx2 -Wall
 
@@ -39,38 +39,38 @@ librandom.a: randomfunctions.h ${SOURCES} ${INCLUDES}
 
 random_r250.Abs: librandom.a random_generic_test.c
 	$(CCOMP) $(CFLAGS) -DTEST_R250 random_generic_test.c -L. -lrandom -o $@
-	./$@
-	rm -f $@
+	$(NO_EXEC) ./$@
+	$(RM)  -f $@
 
 random_mt19937.Abs: librandom.a random_generic_test.c
 	$(CCOMP) $(CFLAGS) -DTEST_MT19937 random_generic_test.c -L. -lrandom -o $@
-	./$@
-	rm $@
+	$(NO_EXEC) ./$@
+	$(RM)  -f $@
 
 random_shr3.Abs: librandom.a random_generic_test.c
 	$(CCOMP) $(CFLAGS) -DTEST_SHR3 random_generic_test.c -L. -lrandom -o $@
-	./$@
-	rm $@
+	$(NO_EXEC) ./$@
+	$(RM)  -f $@
 
 random_xsr128.Abs: librandom.a random_generic_test.c
 	$(CCOMP) $(CFLAGS) -DTEST_XSR128 random_generic_test.c -L. -lrandom -o $@
-	./$@
-	rm $@
+	$(NO_EXEC) ./$@
+	$(RM)  -f $@
 
 random_xsr128r.Abs: librandom.a random_generic_test.c
 	$(CCOMP) $(CFLAGS) -DTEST_XSR128R random_generic_test.c -L. -lrandom -o $@
-	./$@
-	rm $@
+	$(NO_EXEC) ./$@
+	$(RM)  -f $@
 
 random_gaussian.Abs: librandom.a random_generic_test.c
 	$(CCOMP) $(CFLAGS) -DFULL_TEST -mpi random_gaussian_test.c -L. -lrandom -o $@
-	./$@
-	rm $@
+	$(NO_EXEC) ./$@
+	$(RM)  -f $@
 
 random_gaussian_profile.Abs: librandom.a random_generic_test.c random_gaussian.c
 	$(CCOMP) $(CFLAGS) -DFULL_TEST -DPROFILE -mpi random_gaussian.c random_gaussian_test.c -L. -lrandom -o $@
-	./$@
-	rm $@
+	$(NO_EXEC) ./$@
+	$(RM)  -f $@
 
 clean:
 	rm -f ctest ftest *.o *.a *.Abs

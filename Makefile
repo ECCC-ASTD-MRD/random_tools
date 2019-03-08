@@ -1,5 +1,6 @@
 RM = echo
 CCOMP = s.cc
+FCOMP = s.f90
 CFLAGS = -mpi -O2 -ftree-vectorize -mfma -mavx2 -Wall
 
 SOURCES = randomgeneric.c random_gaussian.c   random_mt19937.c  random_r250.c  \
@@ -73,6 +74,12 @@ random_gaussian_profile.Abs: librandom.a random_generic_test.c random_gaussian.c
 	$(RM)  -f $@
 
 doc: randomgeneric.html
+
+demos: librandom.a
+	$(CCOMP) -I. random_demo.c -L. -lrandom -o cdemo.Abs -lm
+	$(FCOMP) -I. random_demo.F90 -L. -lrandom -o fdemo.Abs
+	./cdemo.Abs
+	./fdemo.Abs
 
 randomgeneric.html: randomgeneric.c
 	robodoc_html.sh randomgeneric.c

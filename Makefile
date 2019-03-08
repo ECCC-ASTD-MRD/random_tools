@@ -72,6 +72,11 @@ random_gaussian_profile.Abs: librandom.a random_generic_test.c random_gaussian.c
 	$(NO_EXEC) ./$@
 	$(RM)  -f $@
 
+doc: randomgeneric.html
+
+randomgeneric.html: randomgeneric.c
+	robodoc_html.sh randomgeneric.c
+
 clean:
 	rm -f ctest ftest *.o *.a *.Abs
 

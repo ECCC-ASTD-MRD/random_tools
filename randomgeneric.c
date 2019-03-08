@@ -123,6 +123,78 @@
    end subroutine VecDRan_generic_stream                                                  !InTf!
  end interface                                                                            !InTf!
 #endif
+#if defined(NEVER_TO_BE_TRUE)
+//****f* librandom/Ran_MT19937_new_stream
+// Synopsis
+//    create a random generator "stream" of type MT19937
+//
+// ARGUMENTS
+generic_state *Ran_MT19937_new_stream(void *clone, unsigned int *piSeed, int cSeed)
+// subroutine Ran_MT19937_new_stream(stream, clone, piSeed, cSeed)
+// INPUTS
+//    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+//    piSeed     seed value array
+//    cSeed      number of values in seed array (0 means default seeding)
+// OUTPUTS
+//    stream     pointer to linear stream of type MT19937
+//****
+//****f* librandom/Ran_R250_new_stream
+// Synopsis
+//    create a random generator "stream" of type R250
+//
+// ARGUMENTS
+generic_state *Ran_R250_new_stream(void *clone, unsigned int *piSeed, int cSeed)
+// subroutine Ran_R250_new_stream(stream, clone, piSeed, cSeed)
+// INPUTS
+//    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+//    piSeed     seed value array
+//    cSeed      number of values in seed array (0 means default seeding)
+// OUTPUTS
+//    stream     pointer to linear stream of type R250
+//****
+//****f* librandom/Ran_SHR3_new_stream
+// Synopsis
+//    create a random generator "stream" of type SHR3
+//
+// ARGUMENTS
+generic_state *Ran_SHR3_new_stream(void *clone, uint32_t *piSeed, int cSeed)
+// subroutine Ran_SHR3_new_stream(stream, clone, piSeed, cSeed)
+// INPUTS
+//    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+//    piSeed     seed value array
+//    cSeed      number of values in seed array (0 means default seeding)
+// OUTPUTS
+//    stream     pointer to linear stream of type SHR3
+//****
+//****f* librandom/Ran_XSR128_new_stream
+// Synopsis
+//    create a random generator "stream" of type XSR128
+//
+// ARGUMENTS
+generic_state *Ran_XSR128_new_stream(void *clone, unsigned int *piSeed, int cSeed)
+// subroutine Ran_XSR128_new_stream(stream, clone, piSeed, cSeed)
+// INPUTS
+//    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+//    piSeed     seed value array
+//    cSeed      number of values in seed array (0 means default seeding)
+// OUTPUTS
+//    stream     pointer to linear stream of type XSR128
+//****
+//****f* librandom/Ran_XSR128R_new_stream
+// Synopsis
+//    create a random generator "stream" of type XSR128R
+//
+// ARGUMENTS
+generic_state *Ran_XSR128R_new_stream(void *clone, unsigned int *piSeed, int cSeed)
+// subroutine Ran_XSR128R_new_stream(stream, clone, piSeed, cSeed)
+// INPUTS
+//    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+//    piSeed     seed value array
+//    cSeed      number of values in seed array (0 means default seeding)
+// OUTPUTS
+//    stream     pointer to linear stream of type XSR128R
+//****
+#endif
 //****P* librandom/random value generators
 // Synopsis
 // generic access to multiple families of random number generators (NOT for cryptographic usage)
@@ -163,29 +235,77 @@
 // VecDRan_generic_stream           subroutine VecDRan_generic_stream(stream , Dbuf, n)
 // VecDRanS_generic_stream          subroutine VecDRanS_generic_stream(stream, Dbuf, n)
 // RanSetSeed_gaussian_stream       subroutine RanSetSeed_gaussian_stream(stream, piSeed, cSeed)
-// DRan_gaussian_stream             function   DRan_gaussian_stream(stream)
-// D64Ran_gaussian_stream           function   D64Ran_gaussian_stream(stream)
+// DRan_gaussian_stream             function   DRan_gaussian_stream(stream) result(Dran)
+// D64Ran_gaussian_stream           function   D64Ran_gaussian_stream(stream) result(Dran)
+// 
+// Stream creation functions
+//     C function                                 equivalent Fortran function 
+// Ran_R250_new_stream              subroutine Ran_R250_new_stream(newstream, clone, piSeed, cSeed)
+// Ran_SHR3_new_stream              subroutine Ran_SHR3_new_stream(newstream, clone, piSeed, cSeed)
+// Ran_MT19937_new_stream           subroutine Ran_MT19937_new_stream(newstream, clone, piSeed, cSeed)
+// Ran_XSR128_new_stream            subroutine Ran_XSR128_new_stream(newstream, clone, piSeed, cSeed)
+// Ran_XSR128R_new_stream           subroutine Ran_XSR128R_new_stream(newstream, clone, piSeed, cSeed)
 //
-// Fortran arguments
+// C functions and arguments description
+//    generic_state *Ran_MT19937_new_stream(void *clone_in, unsigned int *piSeed, int cSeed)
+//    generic_state *Ran_R250_new_stream(void *clone_in, unsigned int *piSeed, int cSeed)
+//    generic_state *Ran_SHR3_new_stream(void *clone_in, uint32_t *piSeed, int cSeed)
+//    generic_state *Ran_XSR128_new_stream(void *clone_in, unsigned int *piSeed, int cSeed)
+//    generic_state *Ran_XSR128R_new_stream(void *clone_in, unsigned int *piSeed, int cSeed)
+//    generic_state RanSetSeed_generic_stream(generic_state *stream, unsigned int *piSeed, int cSeed)
+//    uint32_t IRan_generic_stream(generic_state *stream)
+//    double DRan_generic_stream(generic_state *stream)
+//    double DRanS_generic_stream(generic_state *stream)
+//    void VecIRan_generic_stream(generic_state *stream, unsigned int *ibuf, int n)
+//    void VecDRan_generic_stream(generic_state *stream, double *dbuf, int n)
+//    void VecDRanS_generic_stream(generic_state *stream, double *dbuf, int n)
+//    double DRan_gaussian_stream(generic_state *stream)
+//    double D64Ran_gaussian_stream(generic_state *stream)
+//
+//    clone_in  : normally NULL (used only for tests)
+//    cSeed     : number of seed values (see below for specifics)
+//    piSeed    : array of seed values
+//    stream    : pointer to a stream (obtained from the stream creeation routines)
+//    n         : number of values
+//    ibuf      : pointer to array of integers
+//    dbuf      : pointer to array of doubles
+//
+// Fortran arguments description
 //    type(RANDOM_STREAM), intent(IN)              :: stream
-//    integer(c_INT), dimension(cSeed), intent(IN) :: piSeed
-//    integer(C_INT), intent(IN), value            :: cSeed
+//    type(RANDOM_STREAM), intent(IN)              :: clone    ! normally RANDOM_STREAM(C_NULL_PTR)
+//    type(RANDOM_STREAM), intent(OUT)             :: newstream
+//    integer(c_INT), dimension(cSeed), intent(IN) :: piSeed   ! array of seed values
+//    integer(C_INT), intent(IN), value            :: cSeed    ! number of seed values
 //    integer(C_INT), intent(IN), value            :: n
 //    integer(C_INT)                               :: Iran
 //    real(C_DOUBLE)                               :: Dran
 //    integer(C_INT), dimension(n), intent(OUT)    :: Ibuf
 //    real(C_DOUBLE), dimension(n), intent(OUT)    :: Dbuf
 //
-// C note:
+// general notes:
+//    before a stream can be used, it must be created by one of the stream creation functions
+//    there is a specific creator for each type of stream
+//
+//    for the stream creation functions, cSeed = 0 forces a stream variety specific default seeding
+//    cSeed < 0 is an ERROR and may produce UNEXPECTED RESULTS depending upon the stream variety
+//
+//    R250    accepts cSeed = 1 or cSeed = 250 (piSeed must contain cSeed positive values)
+//    SHR3    accepts cSeed > 0  (one value will be used from piSeed)
+//    MT19937 accepts cSeed > 0  (one value will be used from piSeed)
+//    XSR128  accepts cSeed >= 4 (4 values will be used from piSeed)
+//    XSR128R accepts cSeed >= 4 (4 values will be used from piSeed)
+//
+// C specific note:
 //    to compile and load successfully, one must get the interface definitions from
 //
 //    #include <randomfunctions.h>
 //
-// Fortran note:
+// Fortran specific note:
 //    to compile and load successfully, one must get the interface definitions from
 //
 //    use ISO_C_BINDING
 //    include 'randomfunctions.inc'
+//
 //****
 
 void RanNormalZigSetSeed(generic_state *stream, uint32_t *piSeed, int cSeed);
@@ -196,6 +316,7 @@ void RanNormalZigSetSeed(generic_state *stream, uint32_t *piSeed, int cSeed);
 //
 // ARGUMENTS
 void RanSetSeed_gaussian_stream(generic_state *stream, uint32_t *piSeed, int cSeed)  // !InTc!
+// subroutine RanSetSeed_gaussian_stream(stream, piSeed, cSeed)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 //    piSeed     not used  (for consistency with other reseeding functions)
@@ -218,6 +339,7 @@ double DRan_NormalZig_stream(generic_state *stream);
 //    gaussian distribution with 32 significant bits in mantissa
 // ARGUMENTS
 double DRan_gaussian_stream(generic_state *stream)                              // !InTc!
+// function DRan_gaussian_stream(stream) result(ran)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 // OUTPUTS
@@ -238,6 +360,7 @@ double D64Ran_NormalZig_stream(generic_state *stream);
 //    gaussian distribution with 52 significant bits in mantissa
 // ARGUMENTS
 double D64Ran_gaussian_stream(generic_state *stream)                            // !InTc!
+// function D64Ran_gaussian_stream(stream) result(ran)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 // OUTPUTS
@@ -258,6 +381,7 @@ double F_D64Ran_gaussian_stream(statep *s)       // !InTc!
 //
 // ARGUMENTS
 void RanSetSeed_generic_stream(generic_state *stream, unsigned int *piSeed, int cSeed)  // !InTc!
+// subroutine RanSetSeed_generic_stream(stream, piSeed, cSeed)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 //    piSeed     integer "seed" array  (NULL pointer means use default seed)
@@ -279,10 +403,11 @@ void F_RanSetSeed_generic_stream(statep *s, unsigned int *piSeed, int cSeed)  //
 //    generate a single unsigned 32bit integer value, according to the stream type
 // ARGUMENTS
 uint32_t IRan_generic_stream(generic_state *stream)       // !InTc!
+// function IRan_generic_stream(stream) result(iran)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 // OUTPUTS
-//    unsigned 32bit integer,   0 <= value < 1
+//    unsigned 32bit integer
 //****
 {
 //   generic_state *state = stream ;
@@ -304,6 +429,7 @@ uint32_t F_IRan_generic_stream(statep *s)  // Fortran interface using derived ty
 //    generate a single 64bit positive floating point value, according to the stream type
 // ARGUMENTS
 double DRan_generic_stream(generic_state *stream)       // !InTc!
+// function DRan_generic_stream(stream) result(dran)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 // OUTPUTS
@@ -328,6 +454,7 @@ double F_DRan_generic_stream(statep *s)  // Fortran interface using derived type
 //    generate a single 64bit signed floating point value, according to the stream type
 // ARGUMENTS
 double DRanS_generic_stream(generic_state *stream)       // !InTc!
+// function DRanS_generic_stream(stream) result(dran)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 // OUTPUTS
@@ -350,14 +477,14 @@ double F_DRanS_generic_stream(statep *s)  // Fortran interface using derived typ
 //****f* librandom/VecIRan_generic_stream
 // Synopsis
 //    generate multiple unsigned 32bit integer values, according to the stream type
-//    ( 0 <= values < 1 )
 // ARGUMENTS
 void VecIRan_generic_stream(generic_state *stream, unsigned int *ranbuf, int n)       // !InTc!
+// subroutine VecIRan_generic_stream(stream, ranbuf, n)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 //    n          number of values to generate
 // OUTPUTS
-//    ranbuf     array ot output values
+//    ranbuf     array of integer output values
 //****
 {
 //   generic_state *state = stream ;
@@ -399,11 +526,12 @@ void F_VecIRan_generic_stream(statep *s, unsigned int *ranbuf, int n)  // Fortra
 //    ( 0.0 < values < 1.0 )
 // ARGUMENTS
 void VecDRan_generic_stream(generic_state *stream, double *ranbuf, int n)       // !InTc!
+// subroutine VecDRan_generic_stream(stream, ranbuf, n)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 //    n          number of values to generate
 // OUTPUTS
-//    ranbuf     array ot output values
+//    ranbuf     array of double(real*8) output values
 //****
 {
 //   generic_state *state = stream ;
@@ -445,11 +573,12 @@ void F_VecDRan_generic_stream(statep *s, double *ranbuf, int n)  // Fortran inte
 //    ( -1.0 < values < 1.0 )
 // ARGUMENTS
 void VecDRanS_generic_stream(generic_state *stream, double *ranbuf, int n)       // !InTc!
+// subroutine VecDRanS_generic_stream(stream, ranbuf, n)
 // INPUTS
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 //    n          number of values to generate
 // OUTPUTS
-//    ranbuf     array ot output values
+//    ranbuf     array of double (real*8) output values
 //****
 {
 //   generic_state *state = stream ;

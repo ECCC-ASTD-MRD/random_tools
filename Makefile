@@ -29,47 +29,47 @@ ftest:	librandom.a demo_rand.F90 randomfunctions.inc
 
 ctest: librandom.a random_test.c
 	rm -f *.o
-	$(CCOMP) $(CFLAGS) random_test.c -L. -lrandom -o ctest
+	$(CCOMP) $(CFLAGS) -I. random_test.c -L. -lrandom -o ctest
 	rm -f *.o
 
 librandom.a: randomfunctions.h ${SOURCES} ${INCLUDES}
 	rm -f *.o *.a
-	$(CCOMP) $(CFLAGS) -c ${SOURCES}
+	$(CCOMP) $(CFLAGS) -I. -c ${SOURCES}
 	ar rcv librandom.a *.o
 	rm -f *.o
 
 random_r250.Abs: librandom.a random_generic_test.c
-	$(CCOMP) $(CFLAGS) -DTEST_R250 random_generic_test.c -L. -lrandom -o $@
+	$(CCOMP) $(CFLAGS) -I. -DTEST_R250 random_generic_test.c -L. -lrandom -o $@
 	$(NO_EXEC) ./$@
 	$(RM)  -f $@
 
 random_mt19937.Abs: librandom.a random_generic_test.c
-	$(CCOMP) $(CFLAGS) -DTEST_MT19937 random_generic_test.c -L. -lrandom -o $@
+	$(CCOMP) $(CFLAGS) -I. -DTEST_MT19937 random_generic_test.c -L. -lrandom -o $@
 	$(NO_EXEC) ./$@
 	$(RM)  -f $@
 
 random_shr3.Abs: librandom.a random_generic_test.c
-	$(CCOMP) $(CFLAGS) -DTEST_SHR3 random_generic_test.c -L. -lrandom -o $@
+	$(CCOMP) $(CFLAGS) -I. -DTEST_SHR3 random_generic_test.c -L. -lrandom -o $@
 	$(NO_EXEC) ./$@
 	$(RM)  -f $@
 
 random_xsr128.Abs: librandom.a random_generic_test.c
-	$(CCOMP) $(CFLAGS) -DTEST_XSR128 random_generic_test.c -L. -lrandom -o $@
+	$(CCOMP) $(CFLAGS) -I. -DTEST_XSR128 random_generic_test.c -L. -lrandom -o $@
 	$(NO_EXEC) ./$@
 	$(RM)  -f $@
 
 random_xsr128r.Abs: librandom.a random_generic_test.c
-	$(CCOMP) $(CFLAGS) -DTEST_XSR128R random_generic_test.c -L. -lrandom -o $@
+	$(CCOMP) $(CFLAGS)  -I.-DTEST_XSR128R random_generic_test.c -L. -lrandom -o $@
 	$(NO_EXEC) ./$@
 	$(RM)  -f $@
 
 random_gaussian.Abs: librandom.a random_generic_test.c
-	$(CCOMP) $(CFLAGS) -DFULL_TEST -mpi random_gaussian_test.c -L. -lrandom -o $@
+	$(CCOMP) $(CFLAGS) -I. -DFULL_TEST -mpi random_gaussian_test.c -L. -lrandom -o $@
 	$(NO_EXEC) ./$@
 	$(RM)  -f $@
 
 random_gaussian_profile.Abs: librandom.a random_generic_test.c random_gaussian.c
-	$(CCOMP) $(CFLAGS) -DFULL_TEST -DPROFILE -mpi random_gaussian.c random_gaussian_test.c -L. -lrandom -o $@
+	$(CCOMP) $(CFLAGS) -I. -DFULL_TEST -DPROFILE -mpi random_gaussian.c random_gaussian_test.c -L. -lrandom -o $@
 	$(NO_EXEC) ./$@
 	$(RM)  -f $@
 

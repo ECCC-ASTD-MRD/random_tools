@@ -135,6 +135,7 @@ generic_state *Ran_MT19937_new_stream(void *clone, unsigned int *piSeed, int cSe
 //    clone      normally NULL (or pointer to same type stream to duplicate for testing)
 //    piSeed     seed value array
 //    cSeed      number of values in seed array (0 means default seeding)
+//       MT19937 accepts cSeed > 0  (one value will be used from piSeed)
 // OUTPUTS
 //    stream     pointer to linear stream of type MT19937
 //****
@@ -149,6 +150,7 @@ generic_state *Ran_R250_new_stream(void *clone, unsigned int *piSeed, int cSeed)
 //    clone      normally NULL (or pointer to same type stream to duplicate for testing)
 //    piSeed     seed value array
 //    cSeed      number of values in seed array (0 means default seeding)
+//       R250    accepts cSeed = 1 or cSeed = 250 (piSeed must contain cSeed positive values)
 // OUTPUTS
 //    stream     pointer to linear stream of type R250
 //****
@@ -163,6 +165,7 @@ generic_state *Ran_SHR3_new_stream(void *clone, uint32_t *piSeed, int cSeed)
 //    clone      normally NULL (or pointer to same type stream to duplicate for testing)
 //    piSeed     seed value array
 //    cSeed      number of values in seed array (0 means default seeding)
+//       SHR3    accepts cSeed > 0  (one value will be used from piSeed)
 // OUTPUTS
 //    stream     pointer to linear stream of type SHR3
 //****
@@ -177,6 +180,7 @@ generic_state *Ran_XSR128_new_stream(void *clone, unsigned int *piSeed, int cSee
 //    clone      normally NULL (or pointer to same type stream to duplicate for testing)
 //    piSeed     seed value array
 //    cSeed      number of values in seed array (0 means default seeding)
+//       XSR128  accepts cSeed >= 4 (4 values will be used from piSeed)
 // OUTPUTS
 //    stream     pointer to linear stream of type XSR128
 //****
@@ -191,6 +195,7 @@ generic_state *Ran_XSR128R_new_stream(void *clone, unsigned int *piSeed, int cSe
 //    clone      normally NULL (or pointer to same type stream to duplicate for testing)
 //    piSeed     seed value array
 //    cSeed      number of values in seed array (0 means default seeding)
+//       XSR128R accepts cSeed >= 4 (4 values will be used from piSeed)
 // OUTPUTS
 //    stream     pointer to linear stream of type XSR128R
 //****
@@ -444,6 +449,11 @@ void RanSetSeed_generic_stream(generic_state *stream, unsigned int *piSeed, int 
 //    stream     linear stream created by a Ran_XXXXXX_new_stream function
 //    piSeed     integer "seed" array  (NULL pointer means use default seed)
 //    cSeed      size of "seed" array  (0 means use default seed)
+//       R250    accepts cSeed = 1 or cSeed = 250 (piSeed must contain cSeed positive values)
+//       SHR3    accepts cSeed > 0  (one value will be used from piSeed)
+//       MT19937 accepts cSeed > 0  (one value will be used from piSeed)
+//       XSR128  accepts cSeed >= 4 (4 values will be used from piSeed)
+//       XSR128R accepts cSeed >= 4 (4 values will be used from piSeed)
 // OUTPUTS
 //    none       the stream is reseeded and its internal buffer is marked as empty
 //****

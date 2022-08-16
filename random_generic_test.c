@@ -19,6 +19,7 @@
 
 #define NSAMPLES 1000000000
 
+#include <math.h>
 #include <randomfunctions.h>
 #include <mpi.h>
 
@@ -29,7 +30,8 @@ int main(int argc, char **argv){
   double MPI_Wtime() ;
   unsigned int ranbuf[1200000];
   double ranbuf2[1200000];
-  int pos, neg, mask, postot, negtot ;
+  int pos, neg, mask ;
+  long long postot, negtot, walk ;
 #if defined(CYCLIC_TEST)
   int ran;
   long long count, counts ;
@@ -140,7 +142,7 @@ exit(0);
       mask <<= 1 ;//  if(mpi_rank == 0) printf("%5d ",pos-neg) ;
     }
   }
-  if(mpi_rank == 0) printf(", pos - neg = %d\n",postot-negtot);
+  if(mpi_rank == 0) printf(", pos - neg = %lld (random walk = %lld)\n", postot-negtot, walk = sqrtf(1.0f*(postot+negtot)));
 
   for( i=0 ; i < 10 ; i++) VecDRan_generic_stream(gen, ranbuf2, 1000000) ;
   MPI_Barrier(MPI_COMM_WORLD);

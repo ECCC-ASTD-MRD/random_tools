@@ -130,9 +130,9 @@ int main(int argc, char **argv){
   t0 = MPI_Wtime();
   for( i=0 ; i < 1000000000 ; i++) 
 #if defined(TEST64)
-    rval = F_D64Ran_gaussian_stream((struct statep *) &stream);  // time Fortran entry point (costlier)
+    rval = F_D64Ran_gaussian_stream((statep *) &stream);  // time Fortran entry point (costlier)
 #else
-    rval = F_DRan_gaussian_stream((struct statep *) &stream);    // time Fortran entry point (costlier)
+    rval = F_DRan_gaussian_stream((statep *) &stream);    // time Fortran entry point (costlier)
 #endif
   t1 = MPI_Wtime();
   if(mpi_rank == 0)  printf("time for 1E+9 x 1 random DRan_gaussian_stream/R250 double value = %6.3f \n",t1-t0);  // DRan_gaussian_stream256

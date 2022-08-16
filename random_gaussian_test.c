@@ -24,12 +24,12 @@
 #else
 #define INSTRUMENT(A)
 #endif
-INSTRUMENT(unsigned int funcalls;)
-INSTRUMENT(unsigned int funquick;)
-INSTRUMENT(unsigned int funtails;)
-INSTRUMENT(unsigned int funwedge;)
-INSTRUMENT(unsigned int funloops;)
-INSTRUMENT(unsigned int funused;)
+INSTRUMENT(extern unsigned int funcalls;)
+INSTRUMENT(extern unsigned int funquick;)
+INSTRUMENT(extern unsigned int funtails;)
+INSTRUMENT(extern unsigned int funwedge;)
+INSTRUMENT(extern unsigned int funloops;)
+INSTRUMENT(extern unsigned int funused;)
 
 int main(int argc, char **argv){
 //   unsigned int lr;

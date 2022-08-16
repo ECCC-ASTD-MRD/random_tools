@@ -139,15 +139,15 @@ int main(int argc, char **argv){
 
   t1 = 0 ; t0 = 1 ; 
   INSTRUMENT(t1 = funquick ; t0 = funcalls+1 ; )
-  INSTRUMENT(if(mpi_rank == 0)  printf("quick calls in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
+  INSTRUMENT(if(mpi_rank == 0)  printf("%% quick calls in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
   INSTRUMENT(t1 = funtails ;)
-  INSTRUMENT(if(mpi_rank == 0)  printf("tail calls in gaussian generator  = %7.3f\n",t1 / t0 * 100.0);)
+  INSTRUMENT(if(mpi_rank == 0)  printf("%% tail calls in gaussian generator  = %7.3f\n",t1 / t0 * 100.0);)
   INSTRUMENT(t1 = funwedge ;)
-  INSTRUMENT(if(mpi_rank == 0)  printf("wedge calls in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
+  INSTRUMENT(if(mpi_rank == 0)  printf("%% wedge calls in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
   INSTRUMENT(t1 = funloops ;)
-  INSTRUMENT(if(mpi_rank == 0)  printf("extra loops in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
+  INSTRUMENT(if(mpi_rank == 0)  printf("%% extra loops in gaussian generator = %7.3f\n",t1 / t0 * 100.0);)
   INSTRUMENT(t1 = funused ;)
-  INSTRUMENT(if(mpi_rank == 0)  printf("uniform random values used        = %7.3f\n",t1 / t0 * 100.0);)
+  INSTRUMENT(if(mpi_rank == 0)  printf("uniform random values used per call = %7.3f\n",t1 / t0);)
   MPI_Finalize();
   return(0);
 }

@@ -135,7 +135,7 @@ int main(int argc, char **argv){
     rval = F_DRan_gaussian_stream((statep *) &stream);    // time Fortran entry point (costlier)
 #endif
   t1 = MPI_Wtime();
-  if(mpi_rank == 0)  printf("time for 1E+9 x 1 random DRan_gaussian_stream/R250 double value = %6.3f \n",t1-t0);  // DRan_gaussian_stream256
+  if(mpi_rank == 0)  printf("time for 1E+9 x 1 random DRan_gaussian_stream/R250 double value = %6.3f sec\n",t1-t0);  // DRan_gaussian_stream256
 
   t1 = 0 ; t0 = 1 ; 
   INSTRUMENT(t1 = funquick ; t0 = funcalls+1 ; )

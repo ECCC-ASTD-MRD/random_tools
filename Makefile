@@ -9,7 +9,7 @@ SOURCES = randomgeneric.c random_gaussian.c   random_mt19937.c  random_r250.c  \
 
 INCLUDES = randomgeneric.h
 
-# all: ctest ftest
+all: ctest ftest self_tests
 
 self_tests: random_r250.Abs random_mt19937.Abs random_shr3.Abs random_xsr128.Abs random_xsr128r.Abs \
             random_gaussian.Abs random_gaussian_profile.Abs

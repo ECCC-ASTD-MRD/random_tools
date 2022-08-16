@@ -23,9 +23,9 @@ randomfunctions.h: ${SOURCES}
 randomfunctions.inc: ${SOURCES}
 	cat  ${SOURCES} | grep -w InTf | sed 's:[\t ]*!InTf!.*::' > randomfunctions.inc
 
-ftest:	librandom.a demo_rand.F90 randomfunctions.inc
+ftest:	librandom.a random_demo.F90 randomfunctions.inc
 	rm -f *.o
-	$(FCOMP) -openmp demo_rand.F90 -L. -lrandom -lm -o ftest
+	$(FCOMP) -openmp random_demo.F90 -L. -lrandom -lm -o ftest
 	rm -f *.o
 
 ctest: librandom.a random_test.c

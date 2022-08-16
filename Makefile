@@ -28,9 +28,9 @@ ftest:	librandom.a random_demo.F90 randomfunctions.inc
 	$(FCOMP) -openmp random_demo.F90 -L. -lrandom -lm -o ftest
 	rm -f *.o
 
-ctest: librandom.a random_test.c
+ctest: librandom.a random_demo.c
 	rm -f *.o
-	$(CCOMP) $(CFLAGS) -I. random_test.c -L. -lrandom -lm -o ctest
+	$(CCOMP) $(CFLAGS) -I. random_demo.c -L. -lrandom -lm -o ctest
 	rm -f *.o
 
 librandom.a: randomfunctions.h ${SOURCES} ${INCLUDES}

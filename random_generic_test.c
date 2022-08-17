@@ -22,8 +22,10 @@
 #include <math.h>
 #include <randomfunctions.h>
 #include <mpi.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 
-int main(int argc, char **argv){
+int my_main(int argc, char **argv){
   unsigned int lr;
   int i, j;
   double t0, t1, rval;
@@ -196,4 +198,16 @@ exit(0);
 
   MPI_Finalize();
   return(0);
+}
+
+int main(int argc, char **argv){
+  struct rlimit rlim ;
+
+  getrlimit(RLIMIT_STACK, &rlim) ;
+  printf("Stack limit size soft = %ld, hard = %ld\n", rlim.rlim_cur, rlim.rlim_max);
+  if(rlim.rlim_cur < 128000000 && rlim.rlim_cur != -1) 
+    rlim.rlim_cur = (rlim.rlim_max < 128000000) ? rlim.rlim_max : 128000000 ;
+  printf("Stack limit size now soft = %ld, hard = %ld\n", rlim.rlim_cur, rlim.rlim_max);
+  setrlimit(RLIMIT_STACK, &rlim) ;
+  my_main(argc, argv) ;
 }

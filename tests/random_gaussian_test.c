@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <randomfunctions.h>
+#include "randomfunctions.h"
 #include <mpi.h>
 #if defined(PROFILE)
 #define INSTRUMENT(A) A

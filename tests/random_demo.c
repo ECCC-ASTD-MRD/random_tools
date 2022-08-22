@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <randomfunctions.h>
+#include "randomfunctions.h"
 #define NI 10
 int main(){
   uint32_t mySeed = 123456;

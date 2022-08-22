@@ -1,0 +1,57 @@
+include(CTest)
+
+if(BUILD_TESTING)
+  if (EC_INIT_DONE LESS 2)
+    message(STATUS "(EC) Generating random_tools tests")
+    add_custom_target(check COMMAND CTEST_OUTPUT_ON_FAILURE=true ${CMAKE_CTEST_COMMAND} -V)
+
+    add_executable(c_demo random_demo.c)
+    target_link_libraries(c_demo random m)
+    target_include_directories(c_demo PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    add_dependencies(c_demo random)
+    add_dependencies(check c_demo)
+    add_test(NAME c_demo COMMAND ${CMAKE_CURRENT_BINARY_DIR}/c_demo)
+    
+    add_executable(f_demo random_demo.F90)
+    set(WITH_OPENMP TRUE CACHE BOOL "Control whether to use OpenMP")
+    target_compile_options(f_demo PRIVATE
+      $<$<COMPILE_LANG_AND_ID:Fortran,Intel>:-qopenmp>
+      $<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-fopenmp>
+      )
+    target_link_options(f_demo PRIVATE
+      $<$<COMPILE_LANG_AND_ID:Fortran,Intel>:-qopenmp>
+      )
+    target_link_libraries(f_demo random m)
+    target_include_directories(f_demo PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    add_dependencies(f_demo random randomfunctionsINC)
+    add_dependencies(check f_demo)
+    add_test(NAME f_demo COMMAND ${CMAKE_CURRENT_BINARY_DIR}/f_demo)
+    
+    foreach(GENERIC_TEST R250 MT19937 SHR3 XSR128 XSR128R)
+      add_executable(random_${GENERIC_TEST} random_generic_test.c)
+      target_compile_definitions(random_${GENERIC_TEST} PRIVATE TEST_${GENERIC_TEST})
+      target_link_libraries(random_${GENERIC_TEST} PRIVATE random m)
+      target_include_directories(random_${GENERIC_TEST} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+      add_dependencies(random_${GENERIC_TEST} random)
+      add_dependencies(check random_${GENERIC_TEST})
+      add_test(NAME random_${GENERIC_TEST} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/random_${GENERIC_TEST})
+    endforeach()
+    
+    add_executable(random_gaussian random_gaussian_test.c)
+    target_compile_definitions(random_gaussian PUBLIC FULL_TEST)
+    target_link_libraries(random_gaussian random m)
+    target_include_directories(random_gaussian PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    add_dependencies(random_gaussian random)
+    add_dependencies(check random_gaussian)
+    add_test(NAME random_gaussian COMMAND ${CMAKE_CURRENT_BINARY_DIR}/random_gaussian)
+    
+    add_executable(random_gaussian_profile ${CMAKE_SOURCE_DIR}/src/random_gaussian.c random_gaussian_test.c)
+    target_compile_definitions(random_gaussian_profile PUBLIC FULL_TEST PROFILE)
+    target_link_libraries(random_gaussian_profile random m)
+    target_include_directories(random_gaussian_profile PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    add_dependencies(random_gaussian_profile random)
+    add_dependencies(check random_gaussian_profile)
+    add_test(NAME random_gaussian_profile COMMAND ${CMAKE_CURRENT_BINARY_DIR}/random_gaussian_profile)
+    
+  endif()
+endif()

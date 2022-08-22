@@ -70,8 +70,8 @@ INSTRUMENT(unsigned int funwedge = 0;)
 INSTRUMENT(unsigned int funloops = 0;)
 INSTRUMENT(unsigned int funused  = 0;)
 
-#include <randomgeneric.h>
 #include <stdint.h>
+#include "randomgeneric.h"
 /*==========================================================================
  * 
  *  slightly trimmed version of the improved Ziggurat algorithm described in

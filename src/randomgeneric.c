@@ -19,7 +19,7 @@
 
 // generic interface to random functions using streams  // !InTc!
 
-#include <randomgeneric.h>
+#include "randomgeneric.h"
 
 // Fortran interfaces for automated extraction
 #if defined(NEVER_TO_BE_TRUE)

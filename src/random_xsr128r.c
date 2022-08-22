@@ -27,7 +27,7 @@ See <http://creativecommons.org/publicdomain/zero/1.0/>.
 // macro used to instrument code with counters
 #define INSTRUMENT(A) ;
 
-#include <randomgeneric.h>
+#include "randomgeneric.h"
 
 /*==========================================================================
  * XSR128R generators, function names consistent with the other generators

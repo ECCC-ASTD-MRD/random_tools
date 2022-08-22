@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
+<link rel="stylesheet" href="./robodoc.css" type="text/css" />
+<title>./randomgeneric</title>
+<!-- Source: ./ -->
+<!-- Generated with ROBODoc Version 4.99.41 (Nov 27 2013) -->
+</head>
+<body>
+<div id="logo">
+<a name="robo_top_of_doc">random_tools</a>
+</div> <!-- logo -->
+<h3>TABLE OF CONTENTS</h3>
+<ul>
+<li><a href="#robo0">librandom/random value generators</a></li>
+<li><a href="#robo1">librandom/D64Ran_gaussian_stream</a></li>
+<li><a href="#robo2">librandom/DRan_gaussian_stream</a></li>
+<li><a href="#robo3">librandom/DRan_generic_stream</a></li>
+<li><a href="#robo4">librandom/DRanS_generic_stream</a></li>
+<li><a href="#robo5">librandom/IRan_generic_stream</a></li>
+<li><a href="#robo6">librandom/Ran_MT19937_new_stream</a></li>
+<li><a href="#robo7">librandom/Ran_R250_new_stream</a></li>
+<li><a href="#robo8">librandom/Ran_SHR3_new_stream</a></li>
+<li><a href="#robo9">librandom/Ran_XSR128_new_stream</a></li>
+<li><a href="#robo10">librandom/Ran_XSR128R_new_stream</a></li>
+<li><a href="#robo11">librandom/RanSetSeed_gaussian_stream</a></li>
+<li><a href="#robo12">librandom/RanSetSeed_generic_stream</a></li>
+<li><a href="#robo13">librandom/VecDRan_generic_stream</a></li>
+<li><a href="#robo14">librandom/VecDRanS_generic_stream</a></li>
+<li><a href="#robo15">librandom/VecIRan_generic_stream</a></li>
+</ul>
+<hr />
+<a name="librandom2frandom20value20generators"></a>
+<a name="robo0"></a><h2>librandom/random value generators [ package ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ package ]</p>
+<p class="item_name">Synopsis</p>
+<pre> generic access to multiple families of random number generators (NOT for cryptographic usage)
+
+ the user will create a random number "stream" of a given type (see available generators)
+ and call various functions/routines to produce random number sequences (scalar or vector).
+ the stream generators are believed to be "thread safe" once they are initialized
+
+ source code available at:
+   https://gitlab.com/mfvalin/random_tools
+ 
+ scalar values :
+   unsigned integer value      0 &lt;=  value  &lt; 2**32 - 1
+   unsigned double value     0.0 &lt;   value  &lt; 1.0
+   signed double value      -1.0 &lt;   value  &lt; 1.0
+ vector of values : same 3 kinds as scalar values
+
+ available generators  
+ generic (linear) generators :
+    R250     (shift register sequence)     https://www.taygeta.com/rwalks/node2.html
+    MT19937  (Mersenne twister)            https://en.wikipedia.org/wiki/Mersenne_Twister
+    SHR3     (3-shift-register)
+    XSR128   (xor-shift)                   https://en.wikipedia.org/wiki/Xorshift
+    XSR128R  (xor-shift-rotate)            https://en.wikipedia.org/wiki/Xoroshiro128%2B
+ gaussian (normal) generators :
+    NormalZig (ziggurat with 256 bins)     https://en.wikipedia.org/wiki/Ziggurat_algorithm
+
+ performance:
+    the R250 linear generator is the fastest of all (fully vectorizable)
+
+ this package contains C and Fortran functions
+     C function                                 equivalent Fortran function 
+ <a href="#robo12">RanSetSeed_generic_stream</a>        subroutine <a href="#robo12">RanSetSeed_generic_stream</a>(stream, piSeed, cSeed)
+ <a href="#robo5">IRan_generic_stream</a>              function   <a href="#robo5">IRan_generic_stream</a>(stream)  result(Iran)
+ <a href="#robo3">DRan_generic_stream</a>              function   <a href="#robo3">DRan_generic_stream</a>(stream)  result(Dran)
+ <a href="#robo4">DRanS_generic_stream</a>             function   <a href="#robo4">DRanS_generic_stream</a>(stream) result(Dran)
+ <a href="#robo15">VecIRan_generic_stream</a>           subroutine <a href="#robo15">VecIRan_generic_stream</a>(stream , Ibuf, n)
+ <a href="#robo13">VecDRan_generic_stream</a>           subroutine <a href="#robo13">VecDRan_generic_stream</a>(stream , Dbuf, n)
+ <a href="#robo14">VecDRanS_generic_stream</a>          subroutine <a href="#robo14">VecDRanS_generic_stream</a>(stream, Dbuf, n)
+ <a href="#robo11">RanSetSeed_gaussian_stream</a>       subroutine <a href="#robo11">RanSetSeed_gaussian_stream</a>(stream, piSeed, cSeed)
+ <a href="#robo2">DRan_gaussian_stream</a>             function   <a href="#robo2">DRan_gaussian_stream</a>(stream) result(Dran)
+ <a href="#robo1">D64Ran_gaussian_stream</a>           function   <a href="#robo1">D64Ran_gaussian_stream</a>(stream) result(Dran)
+ 
+ Stream creation functions
+     C function                                 equivalent Fortran function 
+ <a href="#robo7">Ran_R250_new_stream</a>              subroutine <a href="#robo7">Ran_R250_new_stream</a>(newstream, clone, piSeed, cSeed)
+ <a href="#robo8">Ran_SHR3_new_stream</a>              subroutine <a href="#robo8">Ran_SHR3_new_stream</a>(newstream, clone, piSeed, cSeed)
+ <a href="#robo6">Ran_MT19937_new_stream</a>           subroutine <a href="#robo6">Ran_MT19937_new_stream</a>(newstream, clone, piSeed, cSeed)
+ <a href="#robo9">Ran_XSR128_new_stream</a>            subroutine <a href="#robo9">Ran_XSR128_new_stream</a>(newstream, clone, piSeed, cSeed)
+ <a href="#robo10">Ran_XSR128R_new_stream</a>           subroutine <a href="#robo10">Ran_XSR128R_new_stream</a>(newstream, clone, piSeed, cSeed)
+
+ C functions and arguments description
+    generic_state *<a href="#robo6">Ran_MT19937_new_stream</a>(void *clone_in, unsigned int *piSeed, int cSeed)
+    generic_state *<a href="#robo7">Ran_R250_new_stream</a>(void *clone_in, unsigned int *piSeed, int cSeed)
+    generic_state *<a href="#robo8">Ran_SHR3_new_stream</a>(void *clone_in, uint32_t *piSeed, int cSeed)
+    generic_state *<a href="#robo9">Ran_XSR128_new_stream</a>(void *clone_in, unsigned int *piSeed, int cSeed)
+    generic_state *<a href="#robo10">Ran_XSR128R_new_stream</a>(void *clone_in, unsigned int *piSeed, int cSeed)
+    generic_state <a href="#robo12">RanSetSeed_generic_stream</a>(generic_state *stream, unsigned int *piSeed, int cSeed)
+    uint32_t <a href="#robo5">IRan_generic_stream</a>(generic_state *stream)
+    double <a href="#robo3">DRan_generic_stream</a>(generic_state *stream)
+    double <a href="#robo4">DRanS_generic_stream</a>(generic_state *stream)
+    void <a href="#robo15">VecIRan_generic_stream</a>(generic_state *stream, unsigned int *ibuf, int n)
+    void <a href="#robo13">VecDRan_generic_stream</a>(generic_state *stream, double *dbuf, int n)
+    void <a href="#robo14">VecDRanS_generic_stream</a>(generic_state *stream, double *dbuf, int n)
+    double <a href="#robo2">DRan_gaussian_stream</a>(generic_state *stream)
+    double <a href="#robo1">D64Ran_gaussian_stream</a>(generic_state *stream)
+
+    clone_in  : normally NULL (used only for tests)
+    cSeed     : number of seed values (see below for specifics)
+    piSeed    : array of seed values
+    stream    : pointer to a stream (obtained from the stream creeation routines)
+    n         : number of values
+    ibuf      : pointer to array of integers
+    dbuf      : pointer to array of doubles
+
+ Fortran arguments description
+    type(RANDOM_STREAM), intent(IN)              :: stream
+    type(RANDOM_STREAM), intent(IN)              :: clone    ! normally RANDOM_STREAM(C_NULL_PTR)
+    type(RANDOM_STREAM), intent(OUT)             :: newstream
+    integer(c_INT), dimension(cSeed), intent(IN) :: piSeed   ! array of seed values
+    integer(C_INT), intent(IN), value            :: cSeed    ! number of seed values
+    integer(C_INT), intent(IN), value            :: n
+    integer(C_INT)                               :: Iran
+    real(C_DOUBLE)                               :: Dran
+    integer(C_INT), dimension(n), intent(OUT)    :: Ibuf
+    real(C_DOUBLE), dimension(n), intent(OUT)    :: Dbuf
+
+ general notes:
+    before a stream can be used, it must be created by one of the stream creation functions
+    there is a specific creator for each type of stream
+
+    for the stream creation functions, cSeed = 0 forces a stream variety specific default seeding
+    cSeed &lt; 0 is an ERROR and may produce UNEXPECTED RESULTS depending upon the stream variety
+
+    R250    accepts cSeed = 1 or cSeed = 250 (piSeed must contain cSeed positive values)
+    SHR3    accepts cSeed &gt; 0  (one value will be used from piSeed)
+    MT19937 accepts cSeed &gt; 0  (one value will be used from piSeed)
+    XSR128  accepts cSeed &gt;= 4 (4 values will be used from piSeed)
+    XSR128R accepts cSeed &gt;= 4 (4 values will be used from piSeed)
+
+ C specific note:
+    to compile and load successfully, one must get the interface definitions from
+
+    #include &lt;randomfunctions.h&gt;
+
+ Fortran specific note:
+    to compile and load successfully, one must get the interface definitions from
+
+    use ISO_C_BINDING
+    include 'randomfunctions.inc'
+
+ ==================== a small Fortran demo program ====================
+
+ program demo
+   use ISO_C_BINDING
+   implicit none
+   include 'randomfunctions.inc'
+   integer, parameter :: NI = 10
+   type(RANDOM_STREAM) :: s, clone
+   integer, dimension(NI) :: ibuf
+   integer :: iran, cSeed
+   integer, dimension(1) :: piSeed
+   real*8,  dimension(NI) :: dbuf, dsbuf
+   real *8 :: dran, dsran
+   cSeed = 0                         ! default initialization
+   clone = RANDOM_STREAM(C_NULL_PTR) ! null clone, not duplicating existing stream
+   call <a href="#robo7">Ran_R250_new_stream</a>(s, clone, piSeed, cSeed)   ! create R250 stream
+   iran  = <a href="#robo5">IRan_generic_stream</a>(s)                      ! get 1 integer value
+   dran  = <a href="#robo3">DRan_generic_stream</a>(s)                      ! get 1 real*8 value
+   dsran = <a href="#robo4">DRanS_generic_stream</a>(s)                     ! get 1 real*8 value
+   print *,'scalar ',iran, dran, dsran
+   call <a href="#robo15">VecIRan_generic_stream</a>(s, ibuf, NI)            ! get NI integer values
+   call <a href="#robo13">VecDRan_generic_stream</a>(s, dbuf, NI)            ! get NI real*8 values
+   call <a href="#robo14">VecDRanS_generic_stream</a>(s, dsbuf, NI)          ! get NI real*8 values
+   print *,'vector1',ibuf(1),dbuf(1),dsbuf(1)
+   print *,'vector2',ibuf(NI),dbuf(NI),dsbuf(NI)
+   call <a href="#robo11">RanSetSeed_gaussian_stream</a>(s,piSeed, cSeed)
+   dran = <a href="#robo2">DRan_gaussian_stream</a>(s)
+   print *,'gaussian ',dran
+   stop
+ end
+
+ ==================== a small C demo program ==================== 
+
+ #include &lt;stdio.h&gt;
+ #include &lt;stdint.h&gt;
+ #include &lt;randomfunctions.h&gt;
+ #define NI 10
+ int main(){
+   uint32_t mySeed = 123456;
+   int cSeed = 0;
+   generic_state *s;
+   uint32_t iran, ibuf[NI];
+   double dran, dsran, dbuf[NI], dsbuf[NI];
+   s = (generic_state *)  <a href="#robo7">Ran_R250_new_stream</a>(NULL, &amp;mySeed, cSeed);  // default seeding
+   iran  = <a href="#robo5">IRan_generic_stream</a>(s) ;                     // get 1 integer value
+   dran  = <a href="#robo3">DRan_generic_stream</a>(s) ;                     // get 1 double value
+   dsran = <a href="#robo4">DRanS_generic_stream</a>(s);                     // get 1 double value
+   printf("scalar  %10d %f %f\n",iran,dran,dsran);
+   <a href="#robo15">VecIRan_generic_stream</a>(s, ibuf, NI) ;                // get NI integer values
+   <a href="#robo13">VecDRan_generic_stream</a>(s, dbuf, NI) ;                // get NI double values
+   <a href="#robo14">VecDRanS_generic_stream</a>(s, dsbuf, NI) ;              // get NI double values
+   printf("vector1 %10d %f %f\n",ibuf[0],dbuf[0],dsbuf[0]);
+   printf("vector2 %10d %f %f\n",ibuf[NI-1],dbuf[NI-1],dsbuf[NI-1]);
+   <a href="#robo11">RanSetSeed_gaussian_stream</a>(s, &amp;mySeed, cSeed);
+   dran = <a href="#robo2">DRan_gaussian_stream</a>(s);
+   printf("gaussian %f\n",dran);
+   return 0;
+ }
+</pre>
+
+<hr />
+<a name="librandom2fD64Ran5fgaussian5fstream"></a>
+<a name="robo1"></a><h2>librandom/D64Ran_gaussian_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    generate a single 64bit positive floating point value, 
+    gaussian distribution with 52 significant bits in mantissa
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">double <strong>D64Ran_gaussian_stream</strong>(generic_state *stream)                            //
+// function <strong>D64Ran_gaussian_stream</strong>(stream) result(ran)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    64bit floating point number, gaussian distribution, 52 significant bits in mantissa
+</pre>
+
+<hr />
+<a name="librandom2fDRan5fgaussian5fstream"></a>
+<a name="robo2"></a><h2>librandom/DRan_gaussian_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    generate a single 64bit positive floating point value, 
+    gaussian distribution with 32 significant bits in mantissa
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">double <strong>DRan_gaussian_stream</strong>(generic_state *stream)                              //
+// function <strong>DRan_gaussian_stream</strong>(stream) result(ran)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    64bit floating point number, gaussian distribution, 32 significant bits in mantissa
+</pre>
+
+<hr />
+<a name="librandom2fDRan5fgeneric5fstream"></a>
+<a name="robo3"></a><h2>librandom/DRan_generic_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    generate a single 64bit positive floating point value, according to the stream type
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">double <strong>DRan_generic_stream</strong>(generic_state *stream)       //
+// function <strong>DRan_generic_stream</strong>(stream) result(dran)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    64bit floating point number    0.0 &lt; value &lt; 1.0
+</pre>
+
+<hr />
+<a name="librandom2fDRanS5fgeneric5fstream"></a>
+<a name="robo4"></a><h2>librandom/DRanS_generic_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    generate a single 64bit signed floating point value, according to the stream type
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">double <strong>DRanS_generic_stream</strong>(generic_state *stream)       //
+// function <strong>DRanS_generic_stream</strong>(stream) result(dran)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    64bit floating point number    -1.0 &lt; value &lt; 1.0
+</pre>
+
+<hr />
+<a name="librandom2fIRan5fgeneric5fstream"></a>
+<a name="robo5"></a><h2>librandom/IRan_generic_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    generate a single unsigned 32bit integer value, according to the stream type
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">uint32_t <strong>IRan_generic_stream</strong>(generic_state *stream)       //
+// function <strong>IRan_generic_stream</strong>(stream) result(iran)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    unsigned 32bit integer
+</pre>
+
+<hr />
+<a name="librandom2fRan5fMT199375fnew5fstream"></a>
+<a name="robo6"></a><h2>librandom/Ran_MT19937_new_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    create a random generator "stream" of type MT19937
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">generic_state *<strong>Ran_MT19937_new_stream</strong>(void *clone, unsigned int *piSeed, int cSeed)
+// subroutine <strong>Ran_MT19937_new_stream</strong>(stream, clone, piSeed, cSeed)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+    piSeed     seed value array
+    cSeed      number of values in seed array (0 means default seeding)
+       MT19937 accepts cSeed &gt; 0  (one value will be used from piSeed)
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    stream     pointer to linear stream of type MT19937
+</pre>
+
+<hr />
+<a name="librandom2fRan5fR2505fnew5fstream"></a>
+<a name="robo7"></a><h2>librandom/Ran_R250_new_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    create a random generator "stream" of type R250
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">generic_state *<strong>Ran_R250_new_stream</strong>(void *clone, unsigned int *piSeed, int cSeed)
+// subroutine <strong>Ran_R250_new_stream</strong>(stream, clone, piSeed, cSeed)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+    piSeed     seed value array
+    cSeed      number of values in seed array (0 means default seeding)
+       R250    accepts cSeed = 1 or cSeed = 250 (piSeed must contain cSeed positive values)
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    stream     pointer to linear stream of type R250
+</pre>
+
+<hr />
+<a name="librandom2fRan5fSHR35fnew5fstream"></a>
+<a name="robo8"></a><h2>librandom/Ran_SHR3_new_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    create a random generator "stream" of type SHR3
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">generic_state *<strong>Ran_SHR3_new_stream</strong>(void *clone, uint32_t *piSeed, int cSeed)
+// subroutine <strong>Ran_SHR3_new_stream</strong>(stream, clone, piSeed, cSeed)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+    piSeed     seed value array
+    cSeed      number of values in seed array (0 means default seeding)
+       SHR3    accepts cSeed &gt; 0  (one value will be used from piSeed)
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    stream     pointer to linear stream of type SHR3
+</pre>
+
+<hr />
+<a name="librandom2fRan5fXSR1285fnew5fstream"></a>
+<a name="robo9"></a><h2>librandom/Ran_XSR128_new_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    create a random generator "stream" of type XSR128
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">generic_state *<strong>Ran_XSR128_new_stream</strong>(void *clone, unsigned int *piSeed, int cSeed)
+// subroutine <strong>Ran_XSR128_new_stream</strong>(stream, clone, piSeed, cSeed)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+    piSeed     seed value array
+    cSeed      number of values in seed array (0 means default seeding)
+       XSR128  accepts cSeed &gt;= 4 (4 values will be used from piSeed)
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    stream     pointer to linear stream of type XSR128
+</pre>
+
+<hr />
+<a name="librandom2fRan5fXSR128R5fnew5fstream"></a>
+<a name="robo10"></a><h2>librandom/Ran_XSR128R_new_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    create a random generator "stream" of type XSR128R
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">generic_state *<strong>Ran_XSR128R_new_stream</strong>(void *clone, unsigned int *piSeed, int cSeed)
+// subroutine <strong>Ran_XSR128R_new_stream</strong>(stream, clone, piSeed, cSeed)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    clone      normally NULL (or pointer to same type stream to duplicate for testing)
+    piSeed     seed value array
+    cSeed      number of values in seed array (0 means default seeding)
+       XSR128R accepts cSeed &gt;= 4 (4 values will be used from piSeed)
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    stream     pointer to linear stream of type XSR128R
+</pre>
+
+<hr />
+<a name="librandom2fRanSetSeed5fgaussian5fstream"></a>
+<a name="robo11"></a><h2>librandom/RanSetSeed_gaussian_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    reseed a random generator "stream" previously created by a call to
+    Ran_XXXXXX_new_stream (where XXXXXX is one of above mentioned linear generators)
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">void <strong>RanSetSeed_gaussian_stream</strong>(generic_state *stream, uint32_t *piSeed, int cSeed)  //
+// subroutine <strong>RanSetSeed_gaussian_stream</strong>(stream, piSeed, cSeed)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+    piSeed     not used  (for consistency with other reseeding functions)
+    cSeed      not used  (for consistency with other reseeding functions)
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    none       the gaussian stream is initialized and its internal buffer is marked as empty
+</pre>
+
+<hr />
+<a name="librandom2fRanSetSeed5fgeneric5fstream"></a>
+<a name="robo12"></a><h2>librandom/RanSetSeed_generic_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    reseed a random generator "stream" previously created by a call to
+    Ran_XXXXXX_new_stream (where XXXXXX is one of above mentioned linear generators)
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">void <strong>RanSetSeed_generic_stream</strong>(generic_state *stream, unsigned int *piSeed, int cSeed)  //
+// subroutine <strong>RanSetSeed_generic_stream</strong>(stream, piSeed, cSeed)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+    piSeed     integer "seed" array  (NULL pointer means use default seed)
+    cSeed      size of "seed" array  (0 means use default seed)
+       R250    accepts cSeed = 1 or cSeed = 250 (piSeed must contain cSeed positive values)
+       SHR3    accepts cSeed &gt; 0  (one value will be used from piSeed)
+       MT19937 accepts cSeed &gt; 0  (one value will be used from piSeed)
+       XSR128  accepts cSeed &gt;= 4 (4 values will be used from piSeed)
+       XSR128R accepts cSeed &gt;= 4 (4 values will be used from piSeed)
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    none       the stream is reseeded and its internal buffer is marked as empty
+</pre>
+
+<hr />
+<a name="librandom2fVecDRan5fgeneric5fstream"></a>
+<a name="robo13"></a><h2>librandom/VecDRan_generic_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    generate multiple 64bit positive floating point values, according to the stream type
+    ( 0.0 &lt; values &lt; 1.0 )
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">void <strong>VecDRan_generic_stream</strong>(generic_state *stream, double *ranbuf, int n)       //
+// subroutine <strong>VecDRan_generic_stream</strong>(stream, ranbuf, n)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+    n          number of values to generate
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    ranbuf     array of double(real*8) output values
+</pre>
+
+<hr />
+<a name="librandom2fVecDRanS5fgeneric5fstream"></a>
+<a name="robo14"></a><h2>librandom/VecDRanS_generic_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    generate multiple 64bit positive floating point values, according to the stream type
+    ( -1.0 &lt; values &lt; 1.0 )
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">void <strong>VecDRanS_generic_stream</strong>(generic_state *stream, double *ranbuf, int n)       //
+// subroutine <strong>VecDRanS_generic_stream</strong>(stream, ranbuf, n)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+    n          number of values to generate
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    ranbuf     array of double (real*8) output values
+</pre>
+
+<hr />
+<a name="librandom2fVecIRan5fgeneric5fstream"></a>
+<a name="robo15"></a><h2>librandom/VecIRan_generic_stream [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
+<p class="item_name">Synopsis</p>
+<pre>    generate multiple unsigned 32bit integer values, according to the stream type
+</pre>
+<p class="item_name">ARGUMENTS</p>
+<pre class="source">void <strong>VecIRan_generic_stream</strong>(generic_state *stream, unsigned int *ranbuf, int n)       //
+// subroutine <strong>VecIRan_generic_stream</strong>(stream, ranbuf, n)
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    stream     linear stream created by a Ran_XXXXXX_new_stream function
+    n          number of values to generate
+</pre>
+<p class="item_name">OUTPUTS</p>
+<pre>    ranbuf     array of integer output values
+</pre>
+
+<div id="footer">
+<p>Generated from ./ with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.41 on Tue Nov 26 2019 18:01:22
+</p>
+</div> <!-- footer -->
+</body>
+</html>

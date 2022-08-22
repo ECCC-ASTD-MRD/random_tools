@@ -37,7 +37,7 @@
  end interface                                                                            !InTf!
 #endif
 
-#include <randomgeneric.h>
+#include "randomgeneric.h"
 /*==========================================================================
  * MT19937 generators, function names consistent with the other generators
  *==========================================================================*/

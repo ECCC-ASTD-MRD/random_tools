@@ -104,7 +104,7 @@
 #endif
 
 // get generic definitions
-#include <randomgeneric.h>
+#include "randomgeneric.h"
 
 /*==========================================================================
  * R250 generators, function names consistent with the other generators

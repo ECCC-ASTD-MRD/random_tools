@@ -33,7 +33,7 @@
 // macro used to instrument code with counters
 #define INSTRUMENT(A) ;
 
-#include <randomgeneric.h>
+#include "randomgeneric.h"
 
 /*==========================================================================
  * SHR3 generators, function names consistent with the other generators

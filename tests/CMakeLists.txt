@@ -13,14 +13,10 @@ if(BUILD_TESTING)
     add_test(NAME c_demo COMMAND ${CMAKE_CURRENT_BINARY_DIR}/c_demo)
     
     add_executable(f_demo random_demo.F90)
-    set(WITH_OPENMP TRUE CACHE BOOL "Control whether to use OpenMP")
-    target_compile_options(f_demo PRIVATE
-      $<$<COMPILE_LANG_AND_ID:Fortran,Intel>:-qopenmp>
-      $<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-fopenmp>
-      )
-    target_link_options(f_demo PRIVATE
-      $<$<COMPILE_LANG_AND_ID:Fortran,Intel>:-qopenmp>
-      )
+    find_package(OpenMP)
+    target_link_libraries(f_demo
+      $<$<LINK_LANGUAGE:Fortran>:OpenMP::OpenMP_Fortran>
+      $<$<LINK_LANGUAGE:C>:OpenMP::OpenMP_C>)
     target_link_libraries(f_demo random m)
     target_include_directories(f_demo PRIVATE ${CMAKE_SOURCE_DIR}/src)
     add_dependencies(f_demo random randomfunctionsINC)

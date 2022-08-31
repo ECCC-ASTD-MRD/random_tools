@@ -38,10 +38,14 @@ make check
 make install
 ```
 
+# Documentation
+
+See documentation on functions in doc/randomgeneric.html
+
 # Troubleshooting
 
 If you encounter problems with the tests, it may because stack size is
-limited on your computer. You could have to change its limit:
+limited on your computer. You could have to change its limit, for example:
 ```
 ulimit -s unlimited
 ```

@@ -1,4 +1,4 @@
-NAME       : random_tools
+NAME       : random-tools
 VERSION    : 1.1.0
 BUILD      : Release
 DESCRIPTION: Set of random number generators

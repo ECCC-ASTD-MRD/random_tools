@@ -209,7 +209,7 @@ generic_state *Ran_XSR128R_new_stream(void *clone, unsigned int *piSeed, int cSe
 // the stream generators are believed to be "thread safe" once they are initialized
 //
 // source code available at:
-//   https://gitlab.com/mfvalin/random_tools
+//   https://github.com/ECCC-ASTD-MRD/random_tools
 // 
 // scalar values :
 //   unsigned integer value      0 <=  value  < 2**32 - 1

@@ -418,7 +418,7 @@ test:ubuntu-22.04-amd64_gnu-11.3.0:
    only:
       - master
       - dev
-     - tags
+      - tags
    dependencies:
       - build:ubuntu-22.04-amd64_gnu-11.3.0
    script:

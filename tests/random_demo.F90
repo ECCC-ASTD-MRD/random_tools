@@ -7,8 +7,8 @@ program demo
   integer, dimension(NI) :: ibuf
   integer :: iran, cSeed
   integer, dimension(1) :: piSeed
-  real*8,  dimension(NI) :: dbuf, dsbuf
-  real *8 :: dran, dsran
+  real(8),  dimension(NI) :: dbuf, dsbuf
+  real(8) :: dran, dsran
   cSeed = 0                         ! default initialization
   clone = RANDOM_STREAM(C_NULL_PTR) ! null clone, not duplicating existing stream
   call Ran_R250_new_stream(s, clone, piSeed, cSeed)   ! create R250 stream

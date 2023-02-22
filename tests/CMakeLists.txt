@@ -1,18 +1,18 @@
-include(CTest)
+if (EC_INIT_DONE LESS 2)
+  include(CTest)
+  add_custom_target(check COMMAND CTEST_OUTPUT_ON_FAILURE=TRUE ${CMAKE_CTEST_COMMAND} -V)
 
-if(BUILD_TESTING)
-  if (EC_INIT_DONE LESS 2)
+  if(BUILD_TESTING)
     message(STATUS "(EC) Generating random_tools tests")
-    add_custom_target(check COMMAND CTEST_OUTPUT_ON_FAILURE=true ${CMAKE_CTEST_COMMAND} -V)
-
-    add_executable(c_demo random_demo.c)
+ 
+    add_executable(c_demo EXCLUDE_FROM_ALL random_demo.c)
     target_link_libraries(c_demo random m)
     target_include_directories(c_demo PRIVATE ${CMAKE_SOURCE_DIR}/src)
     add_dependencies(c_demo random)
     add_dependencies(check c_demo)
     add_test(NAME c_demo COMMAND ${CMAKE_CURRENT_BINARY_DIR}/c_demo)
     
-    add_executable(f_demo random_demo.F90)
+    add_executable(f_demo EXCLUDE_FROM_ALL random_demo.F90)
     find_package(OpenMP)
     target_link_libraries(f_demo
       $<$<LINK_LANGUAGE:Fortran>:OpenMP::OpenMP_Fortran>
@@ -24,7 +24,7 @@ if(BUILD_TESTING)
     add_test(NAME f_demo COMMAND ${CMAKE_CURRENT_BINARY_DIR}/f_demo)
     
     foreach(GENERIC_TEST R250 MT19937 SHR3 XSR128 XSR128R)
-      add_executable(random_${GENERIC_TEST} random_generic_test.c)
+      add_executable(random_${GENERIC_TEST} EXCLUDE_FROM_ALL random_generic_test.c)
       target_compile_definitions(random_${GENERIC_TEST} PRIVATE TEST_${GENERIC_TEST})
       target_link_libraries(random_${GENERIC_TEST} PRIVATE random m)
       target_include_directories(random_${GENERIC_TEST} PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -33,7 +33,7 @@ if(BUILD_TESTING)
       add_test(NAME random_${GENERIC_TEST} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/random_${GENERIC_TEST})
     endforeach()
     
-    add_executable(random_gaussian random_gaussian_test.c)
+    add_executable(random_gaussian EXCLUDE_FROM_ALL random_gaussian_test.c)
     target_compile_definitions(random_gaussian PUBLIC FULL_TEST)
     target_link_libraries(random_gaussian random m)
     target_include_directories(random_gaussian PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -41,7 +41,7 @@ if(BUILD_TESTING)
     add_dependencies(check random_gaussian)
     add_test(NAME random_gaussian COMMAND ${CMAKE_CURRENT_BINARY_DIR}/random_gaussian)
     
-    add_executable(random_gaussian_profile ${CMAKE_SOURCE_DIR}/src/random_gaussian.c random_gaussian_test.c)
+    add_executable(random_gaussian_profile EXCLUDE_FROM_ALL ${CMAKE_SOURCE_DIR}/src/random_gaussian.c random_gaussian_test.c)
     target_compile_definitions(random_gaussian_profile PUBLIC FULL_TEST PROFILE)
     target_link_libraries(random_gaussian_profile random m)
     target_include_directories(random_gaussian_profile PRIVATE ${CMAKE_SOURCE_DIR}/src)

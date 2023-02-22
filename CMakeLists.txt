@@ -9,6 +9,7 @@ ec_parse_manifest()        # Parse MANIFEST file
 
 project(${NAME} DESCRIPTION "${DESCRIPTION}" LANGUAGES C Fortran)
 set(PROJECT_VERSION ${VERSION}${STATE} CACHE STRING "Define the version of random_tools that will be baked into the various artifacts of this build" FORCE)
+set(random_tools_VERSION ${PROJECT_VERSION} CACHE INTERNAL "random_tools version" FORCE) # Needed for cascaded version identification
 
 include(ec_compiler_presets)
 
@@ -23,6 +24,7 @@ endif()
 ec_build_info()            # Generate build information
 
 add_subdirectory(src)
+add_subdirectory(tests)
 
 #----- Packaging
 
@@ -40,9 +42,3 @@ set(CPACK_PACKAGE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 set(CPACK_PACKAGE_FILE_NAME "${PACKAGE_PREFIX}")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${NAME}_${PROJECT_VERSION}")
 include(CPack)
-
-set(BUILD_TESTING FALSE CACHE BOOL "Control whether to build tests")
-# check if tests should be built and executed
-if (BUILD_TESTING)
-  add_subdirectory(tests)
-endif()

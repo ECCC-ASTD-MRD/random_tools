@@ -13,12 +13,6 @@ set(random_tools_VERSION ${PROJECT_VERSION} CACHE INTERNAL "random_tools version
 
 include(ec_compiler_presets)
 
-find_package(MPI)
-if (MPI_FOUND)
-   set(CMAKE_Fortran_COMPILER ${MPI_Fortran_COMPILER})
-   set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
-endif()
-
 #set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
 ec_build_info()            # Generate build information
@@ -42,6 +36,9 @@ write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     COMPATIBILITY SameMajorVersion
 )
+install(EXPORT ${PROJECT_NAME}-targets
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION ${CONFIG_INSTALL_DIR})
 install(FILES   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
                 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION "${CONFIG_INSTALL_DIR}"

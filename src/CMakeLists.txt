@@ -14,34 +14,34 @@ set_target_properties(random PROPERTIES
    POSITION_INDEPENDENT_CODE ON)
   
 add_custom_command(
-   OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/randomfunctions.h
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.h
    PRE_BUILD
-   COMMAND echo '\#include \"randomgeneric.h\"' >  ${CMAKE_CURRENT_SOURCE_DIR}/randomfunctions.h
-   COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && cat ${PROJECT_C_FILES} | grep -w InTc | sed 's:[\t ]*//[\t ]*!InTc!.*:;:' >> ${CMAKE_CURRENT_SOURCE_DIR}/randomfunctions.h
+   COMMAND echo '\#include \"randomgeneric.h\"' >  ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.h
+   COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && cat ${PROJECT_C_FILES} | grep -w InTc | sed 's:[\t ]*//[\t ]*!InTc!.*:;:' >> ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.h
    COMMENT "Generating randomfunctions.h"
    DEPENDS ${PROJECT_C_FILES}
    USES_TERMINAL
 )
 # Add a custom target to regenerate randomfunctions.h
-add_custom_target(randomfunctionsH DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/randomfunctions.h)
+add_custom_target(randomfunctionsH DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.h)
 add_dependencies(random randomfunctionsH)
      
 add_custom_command(
-   OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/randomfunctions.inc
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.inc
    PRE_BUILD
-   COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && cat ${PROJECT_C_FILES} | grep -w InTf | sed 's:[\t ]*!InTf!.*::' >> ${CMAKE_CURRENT_SOURCE_DIR}/randomfunctions.inc
+   COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && cat ${PROJECT_C_FILES} | grep -w InTf | sed 's:[\t ]*!InTf!.*::' >> ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.inc
    COMMENT "Generating randomfunctions.inc"
    DEPENDS ${PROJECT_C_FILES}
    USES_TERMINAL
 )
 # Add a custom target to regenerate randomfunctions.inc
-add_custom_target(randomfunctionsINC DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/randomfunctions.inc)
+add_custom_target(randomfunctionsINC DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.inc)
 add_dependencies(random randomfunctionsINC)
 
 # Installation
 set(DISTINCLUDES
-   randomfunctions.h
-   randomfunctions.inc
+   ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.h
+   ${CMAKE_CURRENT_BINARY_DIR}/randomfunctions.inc
 )
 
 install(TARGETS random

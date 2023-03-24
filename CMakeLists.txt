@@ -13,6 +13,8 @@ set(random_tools_VERSION ${PROJECT_VERSION} CACHE INTERNAL "random_tools version
 
 include(ec_compiler_presets)
 
+find_package(MPI)
+
 #set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
 ec_build_info()            # Generate build information

@@ -23,7 +23,7 @@ build:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - tags
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - set -e
       - mkdir build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
@@ -44,7 +44,7 @@ test:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - build:rhel-8-icelake-64_inteloneapi-2022.1.2
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - set -e
       - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - make check
@@ -62,7 +62,7 @@ package:rhel-8-icelake-64_inteloneapi-2022.1.2:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - set -e
       - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - make package
@@ -78,7 +78,7 @@ build:rhel-8-amd64_inteloneapi-2022.1.2:
       - tags
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - set -e
       - mkdir build_rhel-8-amd64_inteloneapi-2022.1.2
       - cd build_rhel-8-amd64_inteloneapi-2022.1.2
@@ -99,7 +99,7 @@ test:rhel-8-amd64_inteloneapi-2022.1.2:
       - build:rhel-8-amd64_inteloneapi-2022.1.2
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - set -e
       - cd build_rhel-8-amd64_inteloneapi-2022.1.2
       - make check
@@ -117,7 +117,7 @@ package:rhel-8-amd64_inteloneapi-2022.1.2:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - set -e
       - cd build_rhel-8-amd64_inteloneapi-2022.1.2
       - make package
@@ -133,7 +133,7 @@ build:rhel-8-amd64_gnu-9.3.0:
       - tags
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/gnu-9.3.0.sh 
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/gnu-9.3.0.sh 
       - set -e
       - mkdir build_rhel-8-amd64_gnu-9.3.0
       - cd build_rhel-8-amd64_gnu-9.3.0
@@ -154,7 +154,7 @@ test:rhel-8-amd64_gnu-9.3.0:
       - build:rhel-8-amd64_gnu-9.3.0
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/gnu-9.3.0.sh 
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/gnu-9.3.0.sh 
       - set -e
       - cd build_rhel-8-amd64_gnu-9.3.0
       - make check
@@ -172,7 +172,7 @@ package:rhel-8-amd64_gnu-9.3.0:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/gnu-9.3.0.sh 
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/gnu-9.3.0.sh 
       - set -e
       - cd build_rhel-8-amd64_gnu-9.3.0
       - make package
@@ -192,7 +192,7 @@ build:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
      - tags
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - mkdir build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
@@ -218,7 +218,7 @@ test:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
       - build:ubuntu-22.04-amd64_inteloneapi-2022.1.2
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - cd build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
@@ -241,7 +241,7 @@ package:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - cd build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
@@ -262,7 +262,7 @@ build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
      - tags
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - mkdir build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
@@ -288,7 +288,7 @@ test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
@@ -311,7 +311,7 @@ package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
@@ -332,15 +332,15 @@ build:ubuntu-22.04-amd64_gnu-11.4.0:
      - tags
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/gnu.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/gnu.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - mkdir build_ubuntu-22.04-amd64_gnu-11.4.0
       - cd build_ubuntu-22.04-amd64_gnu-11.4.0
-      - cmake ../
+      - cmake -DBUILD_TESTING=true ..
       - time make -j $NCPUS
    artifacts:
-      expire_in: 4 hrs
+      expire_in: 2 hrs
       paths:
          - build_ubuntu-22.04-amd64_gnu-11.4.0
 
@@ -358,7 +358,7 @@ test:ubuntu-22.04-amd64_gnu-11.4.0:
       - build:ubuntu-22.04-amd64_gnu-11.4.0
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/gnu.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/gnu.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - cd build_ubuntu-22.04-amd64_gnu-11.4.0
@@ -381,7 +381,7 @@ package:ubuntu-22.04-amd64_gnu-11.4.0:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/gnu.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/gnu.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
       - cd build_ubuntu-22.04-amd64_gnu-11.4.0

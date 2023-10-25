@@ -31,7 +31,7 @@ build:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - set -e
-      - mkdir ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - SRC_DIR=$(pwd)
       - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - cmake -DBUILD_TESTING=true ${SRC_DIR}
@@ -89,7 +89,7 @@ build:rhel-8-amd64_inteloneapi-2022.1.2:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - set -e
-      - mkdir ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
       - SRC_DIR=$(pwd)
       - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
       - cmake -DBUILD_TESTING=true ${SRC_DIR} 
@@ -147,7 +147,7 @@ build:rhel-8-amd64_gnu-9.3.0:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-amd-64/gnu-9.3.0.sh 
       - set -e
-      - mkdir ${PIPELINE_SUBDIR}/build_rhel-8-amd64_gnu-9.3.0
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-amd64_gnu-9.3.0
       - SRC_DIR=$(pwd)
       - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_gnu-9.3.0
       - cmake -DBUILD_TESTING=true ${SRC_DIR} 
@@ -210,7 +210,7 @@ build:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - mkdir ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
       - SRC_DIR=$(pwd)
       - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
       - cmake -DBUILD_TESTING=true ${SRC_DIR}
@@ -283,7 +283,7 @@ build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - mkdir ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - SRC_DIR=$(pwd)
       - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - cmake -DBUILD_TESTING=true ${SRC_DIR}
@@ -356,7 +356,7 @@ build:ubuntu-22.04-amd64_gnu-11.4.0:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/gnu.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - mkdir ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_gnu-11.4.0
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_gnu-11.4.0
       - SRC_DIR=$(pwd)
       - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_gnu-11.4.0
       - cmake -DBUILD_TESTING=true ${SRC_DIR}

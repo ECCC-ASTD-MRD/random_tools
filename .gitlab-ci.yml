@@ -12,11 +12,17 @@ stages:
 
 before_script:
    - source ~/ci-admin/env/init.sh
+   - export PIPELINE_SUBDIR=${ECCI_BUILD_DIR}/precaution/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/${CI_PIPELINE_ID}
+   - export ECCI_GPSC=${ECCI_GPSC}
+   - export ECCI_GPSC_IMG_UB22=${ECCI_GPSC_IMG_UB22}
+   - export ECCI_GPSC_PROJECT=${ECCI_GPSC_PROJECT}
 
 #----- rhel-8-icelake-64_inteloneapi-2022.1.2
 
 build:rhel-8-icelake-64_inteloneapi-2022.1.2:
    stage: build
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -25,17 +31,16 @@ build:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - set -e
-      - mkdir build_rhel-8-icelake-64_inteloneapi-2022.1.2
-      - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
-      - cmake -DBUILD_TESTING=true ..
+      - mkdir ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
+      - cmake -DBUILD_TESTING=true ${SRC_DIR}
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_rhel-8-icelake-64_inteloneapi-2022.1.2
 
 test:rhel-8-icelake-64_inteloneapi-2022.1.2:
    stage: test
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -46,11 +51,13 @@ test:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - set -e
-      - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - make check
 
 package:rhel-8-icelake-64_inteloneapi-2022.1.2:
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - tags
@@ -64,7 +71,7 @@ package:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - set -e
-      - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
@@ -72,6 +79,8 @@ package:rhel-8-icelake-64_inteloneapi-2022.1.2:
 
 build:rhel-8-amd64_inteloneapi-2022.1.2:
    stage: build
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -80,17 +89,16 @@ build:rhel-8-amd64_inteloneapi-2022.1.2:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - set -e
-      - mkdir build_rhel-8-amd64_inteloneapi-2022.1.2
-      - cd build_rhel-8-amd64_inteloneapi-2022.1.2
-      - cmake -DBUILD_TESTING=true .. 
+      - mkdir ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
+      - cmake -DBUILD_TESTING=true ${SRC_DIR} 
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_rhel-8-amd64_inteloneapi-2022.1.2
 
 test:rhel-8-amd64_inteloneapi-2022.1.2:
    stage: test
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -101,11 +109,13 @@ test:rhel-8-amd64_inteloneapi-2022.1.2:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - set -e
-      - cd build_rhel-8-amd64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
       - make check
 
 package:rhel-8-amd64_inteloneapi-2022.1.2:
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - tags
@@ -119,7 +129,7 @@ package:rhel-8-amd64_inteloneapi-2022.1.2:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - set -e
-      - cd build_rhel-8-amd64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
@@ -127,6 +137,8 @@ package:rhel-8-amd64_inteloneapi-2022.1.2:
 
 build:rhel-8-amd64_gnu-9.3.0:
    stage: build
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -135,17 +147,16 @@ build:rhel-8-amd64_gnu-9.3.0:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-amd-64/gnu-9.3.0.sh 
       - set -e
-      - mkdir build_rhel-8-amd64_gnu-9.3.0
-      - cd build_rhel-8-amd64_gnu-9.3.0
-      - cmake -DBUILD_TESTING=true .. 
+      - mkdir ${PIPELINE_SUBDIR}/build_rhel-8-amd64_gnu-9.3.0
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_gnu-9.3.0
+      - cmake -DBUILD_TESTING=true ${SRC_DIR} 
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_rhel-8-amd64_gnu-9.3.0
 
 test:rhel-8-amd64_gnu-9.3.0:
    stage: test
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -156,11 +167,13 @@ test:rhel-8-amd64_gnu-9.3.0:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-amd-64/gnu-9.3.0.sh 
       - set -e
-      - cd build_rhel-8-amd64_gnu-9.3.0
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_gnu-9.3.0
       - make check
 
 package:rhel-8-amd64_gnu-9.3.0:
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - tags
@@ -174,7 +187,7 @@ package:rhel-8-amd64_gnu-9.3.0:
       - set +e
       - source ${ECCI_ENV}/latest/rhel-8-amd-64/gnu-9.3.0.sh 
       - set -e
-      - cd build_rhel-8-amd64_gnu-9.3.0
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_gnu-9.3.0
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
@@ -182,10 +195,12 @@ package:rhel-8-amd64_gnu-9.3.0:
 
 build:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: build
+   tags:
+      - concurrent
    only:
      - master
      - dev
@@ -195,21 +210,20 @@ build:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - mkdir build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
-      - cmake -DBUILD_TESTING=true ..
+      - mkdir ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
+      - cmake -DBUILD_TESTING=true ${SRC_DIR}
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
 
 test:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: test
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -221,15 +235,17 @@ test:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
       - make check
       
 package:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -244,7 +260,7 @@ package:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
@@ -252,10 +268,12 @@ package:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
 
 build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: build
+   tags:
+      - concurrent
    only:
      - master
      - dev
@@ -265,21 +283,20 @@ build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - mkdir build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
-      - cmake -DBUILD_TESTING=true ..
+      - mkdir ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - cmake -DBUILD_TESTING=true ${SRC_DIR}
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
 
 test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: test
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -291,15 +308,17 @@ test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - make check
       
 package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -314,7 +333,7 @@ package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
@@ -322,10 +341,12 @@ package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
 
 build:ubuntu-22.04-amd64_gnu-11.4.0:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: build
+   tags:
+      - concurrent
    only:
      - master
      - dev
@@ -335,21 +356,20 @@ build:ubuntu-22.04-amd64_gnu-11.4.0:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/gnu.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - mkdir build_ubuntu-22.04-amd64_gnu-11.4.0
-      - cd build_ubuntu-22.04-amd64_gnu-11.4.0
-      - cmake -DBUILD_TESTING=true ..
+      - mkdir ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_gnu-11.4.0
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_gnu-11.4.0
+      - cmake -DBUILD_TESTING=true ${SRC_DIR}
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_ubuntu-22.04-amd64_gnu-11.4.0
 
 test:ubuntu-22.04-amd64_gnu-11.4.0:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: test
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -361,15 +381,17 @@ test:ubuntu-22.04-amd64_gnu-11.4.0:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/gnu.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - cd build_ubuntu-22.04-amd64_gnu-11.4.0
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_gnu-11.4.0
       - make check
 
 package:ubuntu-22.04-amd64_gnu-11.4.0:
    variables:
-      ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_MACH    : ${ECCI_GPSC}
+      ORD_SOUMET_IMAGE   : ${ECCI_GPSC_IMG_UB22}
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -384,12 +406,14 @@ package:ubuntu-22.04-amd64_gnu-11.4.0:
       - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/gnu.sh
       - export ORDENV_PLAT=ubuntu-22.04-amd64-64
       - set -e
-      - cd build_ubuntu-22.04-amd64_gnu-11.4.0
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_gnu-11.4.0
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
 deploy:staging:
    stage: deploy
+   tags:
+      - U2
    only:
       - master
       - tags

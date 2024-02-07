@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 #----- Append EC specific module path
-list(APPEND CMAKE_MODULE_PATH $ENV{EC_CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake_rpn/modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_rpn/modules $ENV{EC_CMAKE_MODULE_PATH})
 
 include(ec_init)           # Initialise compilers and ec specific functions
 ec_git_version()           # Get version from git state
@@ -47,10 +47,9 @@ install(FILES   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
 )
 
 #----- Packaging
-
-ec_install_prefix(${NAME} ${PROJECT_VERSION} PACKAGE_PREFIX)   # Define package prefix
-ec_build_config()                                              # Create build configuration script
-ec_prepare_ssm()                                               # Prepare ssm packaging files
+ec_package_name()                # Define package prefix  
+ec_build_config()                # Create build configuration script
+ec_prepare_ssm()                 # Prepare ssm packaging files
 
 set(CPACK_GENERATOR "TGZ")
 set(CPACK_PACKAGE_VENDOR "ECCC")
@@ -59,6 +58,6 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/package")
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-set(CPACK_PACKAGE_FILE_NAME "${PACKAGE_PREFIX}")
+set(CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${NAME}_${PROJECT_VERSION}")
 include(CPack)

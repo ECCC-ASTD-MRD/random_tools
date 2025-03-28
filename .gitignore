@@ -1,4 +1,12 @@
-/build*
+#----- Compiled object/library files
+*.o
+*.a
+
+#----- Editor pattern
+*.sw[po]
 *~
-randomfunctions.h
-randomfunctions.inc
+
+#----- build directory at the root path
+/build*
+/.vscode/
+/*.code-workspace

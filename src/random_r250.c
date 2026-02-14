@@ -368,7 +368,8 @@ void *Ran_R250_new_stream(void *clone_in, unsigned int *piSeed, int cSeed)   // 
   r250_state *clone = (r250_state *)clone_in;
   int i;
 
-  r250_state *new_state = (r250_state *) memalign(64,sizeof(r250_state)) ;
+  r250_state *new_state;
+  posix_memalign((void**)&new_state, 64, sizeof(*new_state));
 
   if(cSeed < 0 && piSeed==NULL){            // clone a stream (mostly used for testing)
     source = clone ? clone : &r250;         // clone == NULL means clone default internal static stream

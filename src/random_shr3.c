@@ -196,7 +196,8 @@ void *Ran_SHR3_new_stream(void *clone_in, uint32_t *piSeed, int cSeed)   // !InT
   shr3_state *clone = (shr3_state *)clone_in;
   int i;
 
-  shr3_state *new_state = (shr3_state *) memalign(64,sizeof(shr3_state)) ;
+  shr3_state *new_state;
+  posix_memalign((void**)&new_state, 64, sizeof(*new_state));
 
   if(cSeed < 0 && piSeed==NULL){            // clone a stream (mostly used for testing)
     source = clone ? clone : &SHR3;         // clone == NULL means clone default stream

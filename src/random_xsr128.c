@@ -254,7 +254,8 @@ void *Ran_XSR128_new_stream(void *clone_in, unsigned int *piSeed, int cSeed)   /
 {
   xsr128_state *source ;
   xsr128_state *clone = (xsr128_state *)clone_in;
-  xsr128_state *new_state = (xsr128_state *) memalign(64,sizeof(xsr128_state)) ;
+  xsr128_state *new_state;
+  posix_memalign((void**)&new_state, 64, sizeof(*new_state));
   int i;
 
   if(cSeed < 0 && piSeed==NULL){  // clone a stream (mostly used for testing)

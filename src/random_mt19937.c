@@ -283,7 +283,8 @@ generic_state *Ran_MT19937_new_stream(generic_state *clone_in, unsigned int *piS
   mt19937_state *clone = (mt19937_state *)clone_in;
   int i;
 
-  mt19937_state *new_state = (mt19937_state *) memalign(64,sizeof(mt19937_state)) ;
+  mt19937_state *new_state;
+  posix_memalign((void**)&new_state, 64, sizeof(*new_state));
 
   if(cSeed < 0 && piSeed==NULL){               // clone a stream (mostly used for testing)
     source = clone ? clone : &mt19937;         // clone == NULL means clone default static state

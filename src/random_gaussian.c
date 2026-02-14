@@ -155,7 +155,7 @@ void RanNormalZigSetSeed(void *stream, void *values, int nvalues)  // !InTc!
 
   InitZigguratMethodTables256() ;
   if(zig->gauss == NULL) {   // allocate stream buffer for uniform numbers if not already done
-    zig->gauss = (unsigned int *) memalign(64,ZIGBUFSIZE2*sizeof(unsigned int));
+    posix_memalign((void**)&zig->gauss, 64, ZIGBUFSIZE2*sizeof(unsigned int));
     zig->ngauss = 0;
   }
   if(zig->gauss != NULL) init1 = 1;
@@ -305,7 +305,7 @@ void RanNormalZigSetSeed(void *stream, void *values, int nvalues)
   generic_state *zig = stream ;
   InitZigguratMethodTables128() ;
   if(zig->gauss == NULL) {   // allocate stream buffer for uniform numbers if not already done
-    zig->gauss = (unsigned int *) memalign(64,ZIGBUFSIZE2*sizeof(unsigned int));
+    posix_memalign((void**)&zig->gauss, 65,ZIGBUFSIZE2*sizeof(unsigned int)
     zig->ngauss = 0;
   }
   if(zig->gauss != NULL) init0 = 1;

@@ -19,6 +19,7 @@ find_package(MPI)
 
 ec_build_info()            # Generate build information
 
+enable_testing() # Necessary at toplevel to allow running `ctest` from toplevel build directory
 add_subdirectory(src)
 add_subdirectory(tests)
 

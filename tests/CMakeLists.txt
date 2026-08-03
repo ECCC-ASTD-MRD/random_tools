@@ -27,16 +27,26 @@ if (EC_INIT_DONE LESS 2)
 
     if (MPI_FOUND)
       # Check MPI implementation to be able to give the proper flags when running tests
-      execute_process(
-	COMMAND mpirun --version 2>&1
-	COMMAND grep -E -o "Open MPI"
-	OUTPUT_VARIABLE MPI_IMPLEMENTATION
-	OUTPUT_STRIP_TRAILING_WHITESPACE)
-      if ("x${MPI_IMPLEMENTATION}" STREQUAL "xOpen MPI")
-	set(OVERSUBSCRIBE_FLAG -oversubscribe)
-	set(BIND_FLAG -bind-to none)
+      find_program(RPN_MPIRUN mpirun)
+      if (${RPN_MPIRUN} STREQUAL "RPN_MPIRUN-NOTFOUND")
+        message(FATAL_ERROR "mpirun not found. Won't be able to configure the version.")
+      else()
+        execute_process(
+          COMMAND ${RPN_MPIRUN} --version 2>&1
+          COMMAND grep "Open MPI"
+          COMMAND grep -o "[0-9]\\.[0-9]"
+          OUTPUT_VARIABLE MPI_IMPLEMENTATION
+          OUTPUT_STRIP_TRAILING_WHITESPACE)
+        if (MPI_IMPLEMENTATION MATCHES "[0-9]\\.[0-9]")
+          set(EXTRA_MPI_FLAGS ${EXTRA_MPI_FLAGS} --oversubscribe)
+          if (CMAKE_Fortran_COMPILER_ID MATCHES ".*Flang")
+            set(EXTRA_MPI_FLAGS ${EXTRA_MPI_FLAGS} -x LD_LIBRARY_PATH)
+          else()
+            set(EXTRA_MPI_FLAGS ${EXTRA_MPI_FLAGS} --bind-to none)
+          endif()
+        endif()
       endif()
-
+      
       foreach(GENERIC_TEST R250 MT19937 SHR3 XSR128 XSR128R)
 	add_executable(random_${GENERIC_TEST} EXCLUDE_FROM_ALL random_generic_test.c)
 	target_compile_definitions(random_${GENERIC_TEST} PRIVATE TEST_${GENERIC_TEST})
@@ -44,7 +54,7 @@ if (EC_INIT_DONE LESS 2)
 	target_include_directories(random_${GENERIC_TEST} PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR}/src)
 	add_dependencies(random_${GENERIC_TEST} random)
 	add_dependencies(test_execs random_${GENERIC_TEST})
-	add_test(NAME random_${GENERIC_TEST} COMMAND ${MPIEXEC_EXECUTABLE} ${BIND_FLAG} ${MPIEXEC_NUMPROC_FLAG} 1 ${OVERSUBSCRIBE_FLAG} ${CMAKE_CURRENT_BINARY_DIR}/random_${GENERIC_TEST})
+	add_test(NAME random_${GENERIC_TEST} COMMAND ${MPIEXEC_EXECUTABLE} ${EXTRA_MPI_FLAGS} ${MPIEXEC_NUMPROC_FLAG} 1 ${CMAKE_CURRENT_BINARY_DIR}/random_${GENERIC_TEST})
       endforeach()
 
       add_executable(random_gaussian EXCLUDE_FROM_ALL random_gaussian_test.c)
@@ -53,7 +63,7 @@ if (EC_INIT_DONE LESS 2)
       target_include_directories(random_gaussian PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR}/src)
       add_dependencies(random_gaussian random)
       add_dependencies(test_execs random_gaussian)
-      add_test(NAME random_gaussian COMMAND ${MPIEXEC_EXECUTABLE} ${BIND_FLAG} ${MPIEXEC_NUMPROC_FLAG} 1 ${OVERSUBSCRIBE_FLAG} ${CMAKE_CURRENT_BINARY_DIR}/random_gaussian)
+      add_test(NAME random_gaussian COMMAND ${MPIEXEC_EXECUTABLE} ${EXTRA_MPI_FLAGS} ${MPIEXEC_NUMPROC_FLAG} 1 ${CMAKE_CURRENT_BINARY_DIR}/random_gaussian)
 
       add_executable(random_gaussian_profile EXCLUDE_FROM_ALL ${CMAKE_SOURCE_DIR}/src/random_gaussian.c random_gaussian_test.c)
       target_compile_definitions(random_gaussian_profile PUBLIC FULL_TEST PROFILE)
@@ -61,7 +71,7 @@ if (EC_INIT_DONE LESS 2)
       target_include_directories(random_gaussian_profile PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR}/src)
       add_dependencies(random_gaussian_profile random)
       add_dependencies(test_execs random_gaussian_profile)
-      add_test(NAME random_gaussian_profile COMMAND ${MPIEXEC_EXECUTABLE} ${BIND_FLAG} ${MPIEXEC_NUMPROC_FLAG} 1 ${OVERSUBSCRIBE_FLAG} ${CMAKE_CURRENT_BINARY_DIR}/random_gaussian_profile)
+      add_test(NAME random_gaussian_profile COMMAND ${MPIEXEC_EXECUTABLE} ${EXTRA_MPI_FLAGS} ${MPIEXEC_NUMPROC_FLAG} 1 ${CMAKE_CURRENT_BINARY_DIR}/random_gaussian_profile)
     endif()
   endif()
 endif()
